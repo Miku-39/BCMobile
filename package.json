@@ -1,0 +1,42 @@
+{
+  "name": "Claris.NeoGeo",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "jest-expo": "25.0.0",
+    "react-native-scripts": "^1.14.1",
+    "react-test-renderer": "16.2.0",
+    "remote-redux-devtools": "^0.5.12"
+  },
+  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+  "scripts": {
+    "start": "react-native-scripts start",
+    "eject": "react-native-scripts eject",
+    "android": "react-native-scripts android",
+    "ios": "react-native-scripts ios",
+    "test": "node node_modules/jest/bin/jest.js --watch"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "expo": "^25.0.0",
+    "immutable": "^3.8.2",
+    "querystring": "^0.2.0",
+    "react": "16.2.0",
+    "react-native": "^0.55.4",
+    "react-native-awesome-alerts": "^1.0.8",
+    "react-native-datepicker": "^1.6.0",
+    "react-native-elements": "^0.19.0",
+    "react-native-filesystem": "^0.1.0",
+    "react-native-largelist": "^1.2.5",
+    "react-native-picker-module": "^0.1.2",
+    "react-native-textinput-effects": "^0.4.2",
+    "react-navigation": "^1.0.0-beta.21",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^0.16.0"
+  }
+}

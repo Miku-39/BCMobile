@@ -16,7 +16,7 @@ import LoginComponent from '../components/LoginComponent'
     (dispatch) => ({ login: (user, password) => dispatch(login(user, password)) })
 )
 export default class LoginScreen extends Component {
-    state = { user: '', password: '', remember: false}
+    state = { user: '', password: '', remember: true}
 
     componentDidMount = async () => {
         const { remember, user, password } = await loadCredentials()
@@ -36,7 +36,7 @@ export default class LoginScreen extends Component {
 
             //OneSignal.configure({})
             //OneSignal.sendTag('userId', userId)
-            const route =  (roles.includes('mobileCheckpoint') || roles.includes('bolshevikSecurityChief')) ? 'Checkpoint' : 'Main'
+            const route =  'Main'
 
             const resetAction = NavigationActions.reset({
                 index: 0,

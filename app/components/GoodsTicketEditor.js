@@ -8,7 +8,6 @@ import {  View,
           Platform,
           NativeModules,
           LayoutAnimation } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Fumi } from 'react-native-textinput-effects'
 import { CheckBox } from 'react-native-elements'
@@ -23,20 +22,18 @@ const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
-export default class VisitorTicketEditor extends Component {
+export default class GoodsTicketEditor extends Component {
   constructor(props) {
      super(props);
      this.state = {
        selectedValue: null,
        selectedParking: this.props.initialParking,
        fieldsVisible: {
-         parkingPlace: true
+         note: true,
+         khimkiAccessPremises: false
        },
-       'khimkiTime': true,
-       'expirationDate': false,
-       'additionalFieldsVisible': false,
-       'carFieldsVisible': false,
        longTerm: false,
+       allFields: false
      }
   }
 
@@ -46,18 +43,6 @@ export default class VisitorTicketEditor extends Component {
     if(field == 'longTerm'){
       this.props.updateField(state[field], field);
     }
-    if(field == 'carFieldsVisible' && !state[field]){
-      this.props.updateField('', 'carModelText');
-      this.props.updateField('', 'carNumber');
-      this.props.updateField('', 'parkingPlace');
-      this.props.updateField('', 'parking');
-    }
-    if(field == 'additionalFieldsVisible' && !state.field){
-      this.props.updateField('', 'khimkiEmailGuest');
-      this.props.updateField('', 'khimkiEmailMeeting');
-      this.props.updateField('', 'phone');
-      this.props.updateField('', 'khimkiGuestPhone');
-    }
     LayoutAnimation.easeInEaseOut();
     this.setState(state)
   }
@@ -65,12 +50,13 @@ export default class VisitorTicketEditor extends Component {
   updateField = (data, field) => {
     this.props.updateField(data, field);
     LayoutAnimation.easeInEaseOut();
-
-    var fields = this.state
+    fields = this.state
     fields[field] = data
 
     var fieldsVisible = {
-      expirationDate: fields.longTerm
+      carNumber: ((fields.khimkiRequestType == '4022223527000') || (fields.khimkiRequestType == '4022223531000')),
+      note: true,
+      khimkiAccessPremises: (fields.khimkiRequestType && fields.khimkiRequestType != '4022223531000')
     }
 
     fields['fieldsVisible'] = fieldsVisible
@@ -81,16 +67,13 @@ export default class VisitorTicketEditor extends Component {
     Text.defaultProps = Text.defaultProps || {};
     Text.defaultProps.allowFontScaling = true;
     return (
-        <View style={{ flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
-            <KeyboardAwareScrollView
-            enableOnAndroid={true}
-            extraHeight={130}
-            extraScrollHeight={130}>
+        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+            <ScrollView>
                 <View style={{
-                  flexDirection: 'column'}}>
-
+                  flexDirection: 'column',
+                  marginBottom: 290}}>
                   <View style={styles.fieldsContainer}>
-                    <Text style={styles.field}>На гостя и парковку</Text>
+                    <Text style={styles.field}>Ввоз/Вывоз/Перемещение</Text>
                   </View>
 
                   <View style={styles.fieldsContainer}>
@@ -99,6 +82,11 @@ export default class VisitorTicketEditor extends Component {
                         onUpdate={(date) => {this.updateField(date, 'visitDate')}}
                         label="Дата *"
                         placeholder="Выберите дату"/>
+                      <PickerComponent
+                        isHighlighted={this.props.fieldsHighlights.khimkiTime}
+                        label="Время *"
+                        items={this.props.times}
+                        onUpdate={(text) => {this.updateField(text, 'khimkiTime')}}/>
                       <CheckBox
                         title='Долгосрочная'
                         containerStyle={styles.checkboxContainer}
@@ -118,9 +106,17 @@ export default class VisitorTicketEditor extends Component {
                   </View>
 
                   <View style={styles.fieldsContainer}>
+                          <PickerComponent
+                            isHighlighted={this.props.fieldsHighlights.khimkiRequestType}
+                            label="Тип заявки *"
+                            items={this.props.goodsTypes}
+                            onUpdate={(text) => {this.updateField(text, 'khimkiRequestType')}}/>
+                  </View>
+
+                  <View style={styles.fieldsContainer}>
                       <Fumi
-                          style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.visitorFullName ? Colors.accentColor : '#FFF'}]}
-                          label={'ФИО посетителя *'}
+                          style={styles.fumiStyle}
+                          label={'ФИО посетителя'}
                           iconClass={Icon}
                           iconName={'person'}
                           iconColor={Colors.textColor}
@@ -129,26 +125,20 @@ export default class VisitorTicketEditor extends Component {
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'visitorFullName')}}/>
                       <Fumi
-                          style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.whoMeets ? Colors.accentColor : '#FFF'}]}
-                          label={'ФИО встречающего *'}
+                          style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.companyName ? Colors.accentColor : '#FFF'}]}
+                          label={'Компания-Поставщик *'}
                           iconClass={Icon}
                           iconName={'person'}
                           iconColor={Colors.textColor}
                           iconSize={20}
                           labelStyle={styles.fumiLabel}
                           inputStyle={styles.fumiInput}
-                          onChangeText={(text) => {this.updateField(text, 'whoMeets')}}/>
+                          onChangeText={(text) => {this.updateField(text, 'companyName')}}/>
+
                   </View>
 
+                  { this.state.fieldsVisible.carNumber &&
                   <View style={styles.fieldsContainer}>
-                      <CheckBox
-                        title='Автомобиль'
-                        containerStyle={styles.checkboxContainer}
-                        textStyle={styles.checkboxText}
-                        checked={this.state.carFieldsVisible}
-                        checkedColor={Colors.textColor}
-                        onPress={() => {this.setVisible('carFieldsVisible')}}/>
-                  {this.state.carFieldsVisible &&
                       <View>
                       <Fumi
                           style={styles.fumiStyle}
@@ -170,9 +160,30 @@ export default class VisitorTicketEditor extends Component {
                           labelStyle={styles.fumiLabel}
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'carNumber')}}/>
+                      </View>
+                  </View>
+                }
+                  <View style={styles.fieldsContainer}>
+                    <TextInput
+                      placeholder="Данные мат. ценностей *"
+                      underlineColorAndroid='transparent'
+                      style={[styles.textInputStyle, {borderColor: this.props.fieldsHighlights.materialValuesData ? Colors.accentColor : '#FFF'}]}
+                      multiline={true}
+                      scrollEnabled={true}
+                      onChangeText={(text) => {this.props.updateField(text, 'materialValuesData')}}
+                      />
+                  </View>
+                  {this.state.fieldsVisible.khimkiAccessPremises &&
+                  <View style={styles.fieldsContainer}>
+                    <TextInput
+                      placeholder="Маршрут перемещения"
+                      underlineColorAndroid='transparent'
+                      style={styles.textInputStyle}
+                      multiline={true}
+                      scrollEnabled={true}
+                      onChangeText={(text) => {this.props.updateField(text, 'khimkiAccessPremises')}}
+                      />
                   </View>}
-                 </View>
-
                   <View style={styles.fieldsContainer}>
                     <TextInput
                       placeholder="Примечание"
@@ -185,7 +196,7 @@ export default class VisitorTicketEditor extends Component {
                   </View>
 
                 </View>
-            </KeyboardAwareScrollView>
+            </ScrollView>
         </View>
     )
   }

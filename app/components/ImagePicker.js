@@ -18,7 +18,6 @@ export default class ImagePickerComponent extends React.Component {
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
-      console.log(result.uri)
       this.props.onChoose(result.uri)
     }
   };
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
      margin: 10,
      alignSelf: 'center',
      alignItems: 'center',
-     backgroundColor: '#C9C8C7',
+     backgroundColor: '#C8C8C8',
      flexDirection: 'column'
    },
    picker: {
@@ -86,24 +85,24 @@ const styles = StyleSheet.create({
      width: 200,
      alignSelf: 'center',
      alignItems: 'center',
-     backgroundColor: '#C9C8C7',
+     backgroundColor: '#C8C8C8',
      flexDirection: 'column'
    },
    pickerLabel: {
      fontSize: 16,
-     color: '#53565A',
+     color: '#565656',
      fontWeight: 'bold',
      textAlign: 'center'
    },
    pickerText:{
      fontSize: 18,
-     color: '#53565A'
+     color: '#565656'
     },
     image: {
       borderRadius: 20,
       width: 300,
       height: 300,
       borderWidth: 5,
-      borderColor: '#C9C8C7'
+      borderColor: '#C8C8C8'
     }
 })

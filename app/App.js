@@ -9,19 +9,19 @@ import { StackNavigator } from 'react-navigation'
 import store from './middleware/redux'
 import LoginScreen from './containers/LoginScreen'
 import MainScreen from './containers/MainScreen'
-import CheckpointScreen from './containers/CheckpointScreen'
-import TicketScreen from './containers/TicketScreen'
 import TicketsScreen from './containers/TicketsScreen'
-import ServiceScreen from './containers/ServiceScreen'
 import VisitorScreen from './containers/VisitorScreen'
+import ServiceScreen from './containers/ServiceScreen'
+import GoodsScreen from './containers/GoodsScreen'
+import TicketScreen from './containers/TicketScreen'
 
 import api from './middleware/api'
-import { Metrics } from './theme'
+import { Metrics, Colors } from './theme'
 
 
 const styles = StyleSheet.create({
     back: {
-        backgroundColor: '#8d47d3'
+        backgroundColor: Colors.accentColor
     },
     title: { color: 'white' }
 })
@@ -29,11 +29,11 @@ const styles = StyleSheet.create({
 const Navigation = StackNavigator({
     Login: { screen: LoginScreen, navigationOptions: { header: null } },
     Main: { screen: MainScreen },
-    Checkpoint: { screen: CheckpointScreen },
-    Ticket: { screen: TicketScreen },
-    Service: { screen: ServiceScreen },
+    Service: {screen: ServiceScreen },
     Visitor: { screen: VisitorScreen },
+    Goods: { screen: GoodsScreen },
     Tickets: { screen: TicketsScreen },
+    Ticket: { screen: TicketScreen }
 }, {
     initialRouteName: 'Login',
     navigationOptions: {

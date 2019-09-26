@@ -8,6 +8,7 @@ import {  View,
           Platform,
           NativeModules,
           LayoutAnimation } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Fumi } from 'react-native-textinput-effects'
 import { CheckBox } from 'react-native-elements'
@@ -54,9 +55,7 @@ export default class GoodsTicketEditor extends Component {
     fields[field] = data
 
     var fieldsVisible = {
-      carNumber: ((fields.khimkiRequestType == '4022223527000') || (fields.khimkiRequestType == '4022223531000')),
-      note: true,
-      khimkiAccessPremises: (fields.khimkiRequestType && fields.khimkiRequestType != '4022223531000')
+      note: true
     }
 
     fields['fieldsVisible'] = fieldsVisible
@@ -68,12 +67,16 @@ export default class GoodsTicketEditor extends Component {
     Text.defaultProps.allowFontScaling = true;
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-            <ScrollView>
+        <KeyboardAwareScrollView
+            enableOnAndroid={true}
+            extraHeight={130}
+            extraScrollHeight={130}>
                 <View style={{
                   flexDirection: 'column',
-                  marginBottom: 290}}>
+                  marginLeft: 5,
+                  marginRight: 5}}>
                   <View style={styles.fieldsContainer}>
-                    <Text style={styles.field}>Ввоз/Вывоз/Перемещение</Text>
+                    <Text style={styles.field}>{this.props.ticketType == 'GOODS_IN' ? 'Внос имущества' : 'Вынос имущества'}</Text>
                   </View>
 
                   <View style={styles.fieldsContainer}>
@@ -82,11 +85,6 @@ export default class GoodsTicketEditor extends Component {
                         onUpdate={(date) => {this.updateField(date, 'visitDate')}}
                         label="Дата *"
                         placeholder="Выберите дату"/>
-                      <PickerComponent
-                        isHighlighted={this.props.fieldsHighlights.khimkiTime}
-                        label="Время *"
-                        items={this.props.times}
-                        onUpdate={(text) => {this.updateField(text, 'khimkiTime')}}/>
                       <CheckBox
                         title='Долгосрочная'
                         containerStyle={styles.checkboxContainer}
@@ -106,14 +104,6 @@ export default class GoodsTicketEditor extends Component {
                   </View>
 
                   <View style={styles.fieldsContainer}>
-                          <PickerComponent
-                            isHighlighted={this.props.fieldsHighlights.khimkiRequestType}
-                            label="Тип заявки *"
-                            items={this.props.goodsTypes}
-                            onUpdate={(text) => {this.updateField(text, 'khimkiRequestType')}}/>
-                  </View>
-
-                  <View style={styles.fieldsContainer}>
                       <Fumi
                           style={styles.fumiStyle}
                           label={'ФИО посетителя'}
@@ -124,20 +114,8 @@ export default class GoodsTicketEditor extends Component {
                           labelStyle={styles.fumiLabel}
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'visitorFullName')}}/>
-                      <Fumi
-                          style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.companyName ? Colors.accentColor : '#FFF'}]}
-                          label={'Компания-Поставщик *'}
-                          iconClass={Icon}
-                          iconName={'person'}
-                          iconColor={Colors.textColor}
-                          iconSize={20}
-                          labelStyle={styles.fumiLabel}
-                          inputStyle={styles.fumiInput}
-                          onChangeText={(text) => {this.updateField(text, 'companyName')}}/>
-
                   </View>
 
-                  { this.state.fieldsVisible.carNumber &&
                   <View style={styles.fieldsContainer}>
                       <View>
                       <Fumi
@@ -151,8 +129,8 @@ export default class GoodsTicketEditor extends Component {
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'carModelText')}}/>
                       <Fumi
-                          style={styles.fumiStyle}
-                          label={'Номер автомобиля'}
+                          style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.carNumber ? Colors.accentColor : '#FFF'}]}
+                          label={'Номер автомобиля *'}
                           iconClass={Icon}
                           iconName={'directions-car'}
                           iconColor={Colors.textColor}
@@ -162,7 +140,7 @@ export default class GoodsTicketEditor extends Component {
                           onChangeText={(text) => {this.updateField(text, 'carNumber')}}/>
                       </View>
                   </View>
-                }
+
                   <View style={styles.fieldsContainer}>
                     <TextInput
                       placeholder="Данные мат. ценностей *"
@@ -173,17 +151,6 @@ export default class GoodsTicketEditor extends Component {
                       onChangeText={(text) => {this.props.updateField(text, 'materialValuesData')}}
                       />
                   </View>
-                  {this.state.fieldsVisible.khimkiAccessPremises &&
-                  <View style={styles.fieldsContainer}>
-                    <TextInput
-                      placeholder="Маршрут перемещения"
-                      underlineColorAndroid='transparent'
-                      style={styles.textInputStyle}
-                      multiline={true}
-                      scrollEnabled={true}
-                      onChangeText={(text) => {this.props.updateField(text, 'khimkiAccessPremises')}}
-                      />
-                  </View>}
                   <View style={styles.fieldsContainer}>
                     <TextInput
                       placeholder="Примечание"
@@ -196,7 +163,7 @@ export default class GoodsTicketEditor extends Component {
                   </View>
 
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </View>
     )
   }

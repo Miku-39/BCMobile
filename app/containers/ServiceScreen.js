@@ -18,7 +18,6 @@ import * as selectors from '../middleware/redux/selectors'
 import { add, addFile, dismiss } from '../middleware/redux/actions/Ticket'
 
 import { getSession } from '../middleware/redux/selectors'
-import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStorage'
 const NEW_TICKET_STATUS_ID = '4285215000';
 
 const CARD_TICKET_TYPE = '437149164000';
@@ -122,8 +121,7 @@ export default class ServiceScreen extends Component {
         const { ticketType } = this.props.navigation.state.params
 
         var fieldsHighlights = {
-          whatHappened: !ticket.whatHappened,
-          whereHappened: !ticket.whereHappened
+          whatHappened: !ticket.whatHappened
         }
 
         Keyboard.dismiss()

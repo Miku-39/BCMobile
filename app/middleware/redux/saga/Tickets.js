@@ -11,7 +11,11 @@ function * fetchTicketsSaga() {
     const session = getSession(store)
     var response
     try {
-        response = yield call(api.fetchAllTickets, session.companyId)
+        if(session.roles.includes('mobileCheckpoint')){
+          response = yield call(api.fetchTicketsForCheckpoint, session.companyId)
+        }else{
+          response = yield call(api.fetchAllTickets, session.companyId)
+        }
         yield put(fetched(response.data))
     }
     catch(error) {

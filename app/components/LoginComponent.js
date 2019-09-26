@@ -163,7 +163,7 @@ const styles = StyleSheet.create({ // стили всех элементов
     backgroundColor: '#f6f6f6'
   },
   input: {
-    width: Metrics.screenWidth - 80,
+    width: '90%',
     height: 50,
     marginLeft: 7,
     marginTop: 1,

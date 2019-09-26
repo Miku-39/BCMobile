@@ -63,6 +63,10 @@ export default class GoodsScreen extends Component {
     componentWillMount() {
         const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
+        const goodsTicketTypes = [
+          { name: "GOODS_IN",  id: "393629549000" },
+          { name: "GOODS_OUT", id: "421534163000" }
+        ]
         const nowDate = new Date();
         const ticket = {
             visitorFullName: '',
@@ -72,7 +76,7 @@ export default class GoodsScreen extends Component {
             visitDate: nowDate,
             author: employeeId,
             status: NEW_TICKET_STATUS_ID,
-            type: GOODS_TICKET_TYPE,
+            type: goodsTicketTypes[ticketType],
             client: companyId,
             nonstandardCarNumber: true,
             materialValuesData: '',
@@ -112,13 +116,11 @@ export default class GoodsScreen extends Component {
     save = () => {
         const { ticket } = this.state
         const { ticketType } = this.props.navigation.state.params
-        if(!ticket.khimkiTime){ticket.khimkiTime = '4067716405000'}
+
         var fieldsHighlights = {
           materialValuesData: !ticket.materialValuesData,
-          companyName: !ticket.companyName,
-          khimkiRequestType: !ticket.khimkiRequestType,
-          khimkiTime: !ticket.khimkiTime,
-          expirationDate: (ticket.longTerm && !ticket.expirationDate)
+          expirationDate: ticket.longTerm && !ticket.expirationDate,
+          carNumber: !ticket.carNumber
         }
 
         var passed = true;
@@ -157,22 +159,7 @@ export default class GoodsScreen extends Component {
     render = () => {
         const { ticket, ticketType, session} = this.state
         const { isAdding } = this.props
-        const times = [
-          { name: "8:00-18:00",  id: "4067716405000" },
-          { name: "6:00-8:00",   id: "4101841236000" },
-          { name: "8:00-10:00",  id: "4030991143000" },
-          { name: "10:00-12:00", id: "4030991147000" },
-          { name: "12:00-14:00", id: "4030991151000" },
-          { name: "14:00-16:00", id: "4030991158000" },
-          { name: "16:00-18:00", id: "4030991161000" },
-          { name: "18:00-20:00", id: "4101841258000" },
-          { name: "20:00-6:00",  id: "4067716412000" }
-        ]
-        const goodsTypes = [
-          { name: "Ввоз",  id: "4022223527000" },
-          { name: "Вывоз", id: "4022223531000" },
-          { name: "Перемещение", id: "4022223559000" }
-        ]
+
         Text.defaultProps = Text.defaultProps || {};
         Text.defaultProps.allowFontScaling = false;
         return (
@@ -185,9 +172,6 @@ export default class GoodsScreen extends Component {
                     fieldsHighlights={this.state.fieldsHighlights}
                     ticketType={ticketType}
 
-                    times={times}
-                    goodsTypes={goodsTypes}
-                    carParkings={session.carParkings.map((item) => {return {name: item.name[0], id: item.id}})}
                     services={session.services}
                 />
             </Loader>

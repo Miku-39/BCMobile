@@ -50,7 +50,7 @@ export default class PickerComponent extends React.Component {
             value={this.state.pickedData}
             onItemChange={(item) => {this.props.onUpdate(item.value)}}
             placeholderStyle={styles.pickerText}
-            //androidPickerMode="dropdown"
+            androidPickerMode="dialog"
           />
         </View>
       </View>

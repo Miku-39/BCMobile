@@ -9,16 +9,15 @@ export default class DatePickerComponent extends React.Component {
   }
 
   render() {
-    const minDate = new Date()
-    const maxDate = new Date()
-    minDate.setFullYear(minDate.getFullYear()-1)
-    maxDate.setFullYear(minDate.getFullYear()+2)
+    const minDate = this.props.date ? new Date(this.props.date) : new Date()
+    const maxDate = this.props.date ? new Date(this.props.date) : new Date()
+    maxDate.setFullYear(minDate.getFullYear()+1)
 
     return (
       <View style={{margin: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
           <Text style={styles.pickerLabel}>{this.props.label}</Text>
           <DatePicker
-              style={{ alignSelf: 'center', height: 40, width: 210, fontSize: 18, color: Colors.textColor,}}
+              style={{ alignSelf: 'center', height: 40, width: 210}}
               date={this.props.date}
               mode="date"
               format="YYYY-MM-DD"

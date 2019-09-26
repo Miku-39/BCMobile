@@ -50,10 +50,12 @@ const addFile = (uri) =>  {
 const authorize = () => instance.get('/vNext/v1/users/current')
 const setAuthHeader = (token) => instance.defaults.headers.authorization = `Bearer ${token}`
 
-const fetchParkingsForCars = () => instance.get(`vNext/v1/parkings?filterBy=Type.Id="4022244917000" `).catch(onError)
-const fetchParkingsForGoods = () => instance.get(`/vNext/v1/parkings`).catch(onError)
+const fetchTicketsForCheckpoint = userId => instance.get(`/vnext/v1/requests?orderBy=carNumber&filters=RequestsForCheckpoint,CurrentDayRequests&pageSize=500&pageNumber=1`)
+const fetchTicketsForSecurityChief = userId => instance.get(`/vNext/v1/requests?filters=RequestsForBolshevikSecurityChief,CurrentDayRequests&pageSize=500&pageNumber=1&orderBy=Number*-1`)
+const fetchParkingsForCars = () => instance.get(`vNext/v1/parkings`).catch(onError)
+//const fetchParkingsForGoods = () => instance.get(`/vNext/v1/parkings`).catch(onError)
 const fetchAllTickets = companyId => {
-return instance.get('vNext/v1/requests?orderBy=number+desc,&filters=NotClosedRequests,RequestsForTenant', conf).catch(onError)
+return instance.get('vNext/v1/requests?orderBy=number+desc,&amp;filters=RequestsForTenant,NotClosedRequests', conf).catch(onError)
 }
 
 const updateTicketStatus = (ticket) => instance.patch(`/vnext/v1/requests/${ticket.id}`, {status: ticket.status})
@@ -61,5 +63,5 @@ const updateTicketStatus = (ticket) => instance.patch(`/vnext/v1/requests/${tick
 const addTicket = (ticket) => instance.post('/vNext/v1/requests', ticket).catch(onError)
 
 export default { login, authorize, setAuthHeader,
-                 fetchParkingsForCars, fetchParkingsForGoods, fetchAllTickets, updateTicketStatus,
-                 addTicket, addFile }
+                 fetchParkingsForCars, /*fetchParkingsForGoods,*/ fetchAllTickets, updateTicketStatus,
+                 addTicket, addFile, fetchTicketsForCheckpoint, fetchTicketsForSecurityChief }

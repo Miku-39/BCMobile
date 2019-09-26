@@ -20,6 +20,7 @@ import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStor
 
 const NEW_TICKET_STATUS_ID = '4285215000';
 const VISITOR_TICKET_TYPE = '393629546000';
+const CAR_TICKET_TYPE = '393629546000';
 
 const headerButtonsHandler = { save: () => null }
 
@@ -71,7 +72,7 @@ export default class VisitorScreen extends Component {
             visitDate: nowDate,
             author: employeeId,
             status: NEW_TICKET_STATUS_ID,
-            type: VISITOR_TICKET_TYPE,
+            type: ticketType == 'VISITOR' ? VISITOR_TICKET_TYPE : CAR_TICKET_TYPE,
             client: companyId,
             nonstandardCarNumber: true,
             longTerm: false
@@ -111,10 +112,9 @@ export default class VisitorScreen extends Component {
         const { ticketType } = this.props.navigation.state.params
         if(!ticket.khimkiTime){ticket.khimkiTime = '4067716405000'}
         var fieldsHighlights = {
-          khimkiTime: !ticket.khimkiTime,
           expirationDate: (ticket.longTerm && !ticket.expirationDate),
-          whoMeets: !ticket.whoMeets,
-          visitorFullName: !ticket.visitorFullName
+          visitorFullName: !ticket.visitorFullName && ticketType == 'VISITOR',
+          carNumber: !ticket.carNumber && ticketType =='CAR'
         }
 
         var passed = true;
@@ -156,7 +156,7 @@ export default class VisitorScreen extends Component {
 
 
     render = () => {
-        const { ticket, ticketType, session} = this.state
+        const { ticket, ticketType, session } = this.state
         const { isAdding } = this.props
         const times = [
           { name: "8:00-18:00",  id: "4067716405000" },

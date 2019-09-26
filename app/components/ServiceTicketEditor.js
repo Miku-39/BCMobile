@@ -7,7 +7,7 @@ import ReactNativePickerModule from 'react-native-picker-module'
 import { CheckBox } from 'react-native-elements'
 import ImagePickerComponent from '../components/ImagePicker'
 import DatePickerComponent from '../components/DatePicker'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Colors } from '../theme'
 
 export default class ServiceScreen extends Component {
@@ -29,7 +29,15 @@ export default class ServiceScreen extends Component {
     Text.defaultProps.allowFontScaling = true;
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-            <ScrollView>
+        <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        extraHeight={130}
+        extraScrollHeight={130}>
+            <View style={{
+              flexDirection: 'column',
+              marginLeft: 5,
+              marginRight: 5}}>
+
                 <View style={styles.fieldsContainer}>
                   <Text style={styles.field}>В инженерную службу Арендодателя</Text>
                 </View>
@@ -37,7 +45,7 @@ export default class ServiceScreen extends Component {
                 <View>
                 <Fumi
                     style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.whereHappened ? Colors.accentColor : '#FFF'}]}
-                    label={'Место расположения *'}
+                    label={'Где произошло'}
                     iconClass={Icon}
                     iconName={'room'}
                     iconColor={Colors.textColor}
@@ -46,7 +54,7 @@ export default class ServiceScreen extends Component {
                     onChangeText={(text) => {this.props.updateField(text, 'whereHappened')}}
                 />
                 <TextInput
-                  placeholder="Что случилось *"
+                  placeholder="Что сделать *"
                   underlineColorAndroid='transparent'
                   style={[styles.textInputStyle, {borderColor: this.props.fieldsHighlights.whatHappened ? Colors.accentColor : '#FFF'}]}
                   multiline={true}
@@ -57,8 +65,9 @@ export default class ServiceScreen extends Component {
                     onChoose={this.props.saveFile}/>
                 </View>
 
-            </ScrollView>
-      </View>
+                </View>
+                </KeyboardAwareScrollView>
+            </View>
     )
   }
 }const styles = StyleSheet.create({

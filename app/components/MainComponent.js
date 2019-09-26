@@ -20,7 +20,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 export default MainComponent = (props) => {
   Text.defaultProps = Text.defaultProps || {};
   Text.defaultProps.allowFontScaling = false;
-  const { session } = this.props
+  const { session } = props
     return (
         <ScrollView style={styles.mainContainer}>
             {

@@ -28,6 +28,7 @@ export default class MainScreenContainer extends Component {
     render = () => {
         const { navigate } = this.props.navigation
         const { session } = this.state
+        console.log(session)
         return (
 
           <MainComponent

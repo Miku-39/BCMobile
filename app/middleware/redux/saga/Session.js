@@ -18,6 +18,7 @@ function * loginSaga(action) {
         const carParkings = (yield call(api.fetchParkingsForCars)).data
         //const goodsParkings = (yield call(api.fetchParkingsForGoods)).data
         //const services = (yield call(api.fetchServices)).data
+        const isLesnaya = accountId == '14366'
         const session = {
             token: access_token,
             userId: id,
@@ -27,7 +28,7 @@ function * loginSaga(action) {
             account: accountName,
             roles: roles,
             carParkings: carParkings,
-            isLesnaya: accountId == '14366'
+            isLesnaya: isLesnaya
             //goodsParkings: goodsParkings,
             //services: services
         }

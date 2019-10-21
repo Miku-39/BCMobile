@@ -19,7 +19,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 export default MainComponent = (props) => {
   Text.defaultProps = Text.defaultProps || {};
-  Text.defaultProps.allowFontScaling = false;
+  //Text.defaultProps.allowFontScaling = false;
   const { session } = props
     return (
         <ScrollView style={styles.mainContainer}>
@@ -74,6 +74,14 @@ export default MainComponent = (props) => {
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
                             <Text style={styles.buttonLabel}>Наши{"\n"}заявки</Text>
+                        </View>
+                    </TouchableOpacity>}
+
+                    {session.isLesnaya &&
+                    <TouchableOpacity onPress={() => { props.openTickets(true) }}>
+                        <View style={styles.Button}>
+                            <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
+                            <Text style={styles.buttonLabel}>Новые{"\n"}заявки</Text>
                         </View>
                     </TouchableOpacity>}
 

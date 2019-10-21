@@ -14,7 +14,7 @@ export default class Ticket extends Component {
 
   render () {
     Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.allowFontScaling = true;
+    //Text.defaultProps.allowFontScaling = true;
     const { fieldsProperties, ticket } = this.props
     const fieldGroupRenderer = (fieldGroup) => {
       var fields = []

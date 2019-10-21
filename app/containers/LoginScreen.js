@@ -37,7 +37,7 @@ export default class LoginScreen extends Component {
             //OneSignal.configure({})
             //OneSignal.sendTag('userId', userId)
             const route = (roles.includes('mobileCheckpoint') || roles.includes('bolshevikSecurityChief')) ? 'Checkpoint' : 'Main'
-
+            console.log('Route: ' + route)
             const resetAction = NavigationActions.reset({
                 index: 0,
                 actions: [
@@ -64,6 +64,7 @@ export default class LoginScreen extends Component {
 
     _handleLogInClick = () => {
         const { user, password } = this.state
+        console.log('login')
         if (!user || !password)
             Alert.alert( 'Ошибка', 'Необходимо заполнить имя пользователя и пароль', [ {text: 'Закрыть', onPress: () => { }} ])
         else this.props.login(user, password)

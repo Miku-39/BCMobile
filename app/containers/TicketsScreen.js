@@ -16,7 +16,7 @@ import { connect } from 'react-redux'
 
 import { Metrics, Colors } from '../theme'
 import { fetch } from '../middleware/redux/actions/Tickets'
-import { getTickets, getTicket } from '../middleware/redux/selectors'
+import { getTickets, getTicket, getSession } from '../middleware/redux/selectors'
 import Loader from '../components/Loader'
 
 const headerButtonsHandler = {
@@ -45,7 +45,8 @@ const goodsTypes = {
 @connect(
     store => ({
         tickets: getTickets(store),
-        ticket: getTicket(store)
+        ticket: getTicket(store),
+        session: getSession(store)
     }),
     { fetch }
 )
@@ -71,6 +72,12 @@ export default class TicketsScreen extends Component {
         searchBarIsShown: false
     }
 
+    componentWillMount() {
+        const { session } = this.props
+        console.log(session)
+        this.setState({session: session})
+    }
+
     componentDidMount () {
         headerButtonsHandler.search = this._handleShowSearchBarClick
         headerButtonsHandler.refresh = this._handleRefreshClick
@@ -78,8 +85,13 @@ export default class TicketsScreen extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
-        const { items } = nextProps.tickets
-        this.setState({ items: items })
+        const { regularTickets, openTickets, onCreatetickets } = nextProps.tickets.tickets
+        const { session } = this.state
+        var tickets = regularTickets
+        if(session.isLesnaya && session.roles.includes('administratorBC') && session.roles.includes('makingAgreementBC')){
+          tickets = this.props.isAdditionalList ? onCreatetickets : openTickets
+        }
+        this.setState({ items: tickets })
     }
 
     _handleRefreshClick = () => {
@@ -152,7 +164,7 @@ export default class TicketsScreen extends Component {
 
     render() {
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.allowFontScaling = true;
+        //Text.defaultProps.allowFontScaling = true;
         const { navigation } = this.props
         const { items, searchBarIsShown } = this.state
         const { isFetching, fetched } = this.props.tickets

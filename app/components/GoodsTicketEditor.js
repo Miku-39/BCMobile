@@ -64,7 +64,7 @@ export default class GoodsTicketEditor extends Component {
 
   render () {
     Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.allowFontScaling = true;
+    //Text.defaultProps.allowFontScaling = true;
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
         <KeyboardAwareScrollView
@@ -101,6 +101,12 @@ export default class GoodsTicketEditor extends Component {
                         placeholder="Выберите дату"
                         />
                       }
+                      {this.props.session.isLesnaya &&
+                      <PickerComponent
+                          label="Здание"
+                          removeEmptyField={true}
+                          items={this.props.lesnayaDepartments}
+                          onUpdate={(text) => {this.updateField(text, 'department')}}/>}
                   </View>
 
                   <View style={styles.fieldsContainer}>

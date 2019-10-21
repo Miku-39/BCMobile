@@ -20,7 +20,7 @@ export default class PickerComponent extends React.Component {
     pickedData: null
   };
 
-  data = [{label: 'Не выбрано', value: ''}].concat(this.props.items.map(item => {return {label: item.name, value: item.id}}))
+  data = this.props.removeEmptyField ? this.props.items.map(item => {return {label: item.name, value: item.id}}) : [{label: 'Не выбрано', value: ''}].concat(this.props.items.map(item => {return {label: item.name, value: item.id}}))
   handlePicker = data => {
     LayoutAnimation.easeInEaseOut()
     this.setState({ pickedData: data });

@@ -6,7 +6,7 @@ import { Metrics, Colors } from '../theme'
 export default class Loader extends Component {
     render () {
       Text.defaultProps = Text.defaultProps || {};
-      Text.defaultProps.allowFontScaling = false;
+      //Text.defaultProps.allowFontScaling = false;
         return (
             <View style={{flex: 1}}>
                 { this.props.children }
@@ -14,7 +14,7 @@ export default class Loader extends Component {
                     this.props.isLoading &&
                     <View style={styles.dialogContainer}>
                         <View style={styles.dialog}>
-                            <ActivityIndicator color='white' size='large' />
+                            <ActivityIndicator color='white' size='large' style={{margin: 5}} />
                             <Text style={{marginRight: 10, color: 'white'}}>{this.props.message}</Text>
                         </View>
                     </View>

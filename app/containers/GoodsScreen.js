@@ -19,6 +19,7 @@ import { getSession } from '../middleware/redux/selectors'
 import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStorage'
 
 const NEW_TICKET_STATUS_ID = '4285215000';
+const ACCEPTED_TICKET_STATUS_ID = '12884953000';
 const GOODS_TICKET_TYPE = '393629549000';
 
 const headerButtonsHandler = { save: () => null }
@@ -35,7 +36,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
         isAdding: selectors.getIsTicketAdding(store),
         added: selectors.getIsTicketAdded(store),
         error: selectors.getIsTicketAddingFailed(store),
-        session: getSession(store)
+        session: selectors.getSession(store)
     }),
     dispatch => ({
         addTicket: (ticket) => dispatch(add(ticket)),
@@ -63,10 +64,9 @@ export default class GoodsScreen extends Component {
     componentWillMount() {
         const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
-        const goodsTicketTypes = [
-          { name: "GOODS_IN",  id: "393629549000" },
-          { name: "GOODS_OUT", id: "421534163000" }
-        ]
+        const goodsTicketTypes = { "GOODS_IN": "393629549000",
+                                   "GOODS_OUT": "421534163000" }
+
         const nowDate = new Date();
         const ticket = {
             visitorFullName: '',
@@ -75,13 +75,28 @@ export default class GoodsScreen extends Component {
             actualCreationDate: nowDate,
             visitDate: nowDate,
             author: employeeId,
-            status: NEW_TICKET_STATUS_ID,
+            status: ACCEPTED_TICKET_STATUS_ID,
             type: goodsTicketTypes[ticketType],
             client: companyId,
             nonstandardCarNumber: true,
             materialValuesData: '',
             longTerm: false
         }
+
+        console.log(ticket.type)
+
+        if(session.isLesnaya){
+          ticket.department = session.department
+          if((session.roles.includes('administatorBC') ||
+              session.roles.includes('restrictedAdministatorBC')) &&
+              session.roles.includes('makingAgreementBC')){
+                ticket.status = ACCEPTED_TICKET_STATUS_ID //Если один из администраторов
+              }else{
+                ticket.status = ticket.department == '4006045944000' ? NEW_TICKET_STATUS_ID : ACCEPTED_TICKET_STATUS_ID
+              }
+          ticket.manager = ticket.department == '4006045944000' ? '3959752571000' : null //если ЦБ, то Татаринова
+        }
+
         const fieldsHighlights = {}
 
         this.setState({ticket: ticket, showCarFields: showCarFields,
@@ -161,7 +176,16 @@ export default class GoodsScreen extends Component {
         const { isAdding } = this.props
 
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.allowFontScaling = false;
+
+        const lesnayaDepartments = [
+          { name: "БЦ Лесная 43", id: "3959751378000" },
+          { name: "БЦ Цветной Бульвар", id: "4006045944000" }
+        ]
+
+        if(session.department == "4006045944000")
+          lesnayaDepartments[0], lesnayaDepartments[1] = lesnayaDepartments[1], lesnayaDepartments[0]
+
+        //Text.defaultProps.allowFontScaling = false;
         return (
             <Loader message='Сохранение' isLoading={isAdding}>
                 <GoodsTicketEditor
@@ -171,6 +195,8 @@ export default class GoodsScreen extends Component {
                     saveFile={this.saveFile}
                     fieldsHighlights={this.state.fieldsHighlights}
                     ticketType={ticketType}
+                    session={session}
+                    lesnayaDepartments={lesnayaDepartments}
 
                     services={session.services}
                 />

@@ -11,14 +11,31 @@ function * fetchTicketsSaga() {
     const session = getSession(store)
     var response
     try {
+        var regularTickets = []
+        var onCreatetickets = []
+        var openTickets = []
+
         if(session.roles.includes('mobileCheckpoint')){
-          response = yield call(api.fetchTicketsForCheckpoint, session.companyId)
+          regularTickets = (yield call(api.fetchTicketsForCheckpoint, session.companyId)).data
         }else{
-          response = yield call(api.fetchAllTickets, session.companyId)
+          regularTickets = (yield call(api.fetchAllTickets, session.companyId)).data
         }
-        yield put(fetched(response.data))
+
+        if(session.isLesnaya){
+          onCreatetickets = (yield call(api.fetchOnCreateTickets, companyId)).data
+          openTickets = (yield call(api.fetchOpenTickets, companyId)).data
+        }
+
+        const tickets = {
+          regularTickets: regularTickets,
+          onCreatetickets: onCreatetickets,
+          openTickets: openTickets
+        }
+
+        yield put(fetched(tickets))
     }
     catch(error) {
+      console.log(error)
         yield put(fetchFailed(error))
     }
 }

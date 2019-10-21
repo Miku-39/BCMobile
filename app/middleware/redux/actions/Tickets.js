@@ -15,10 +15,10 @@ export const isFetching = () => {
     }
 }
 
-export const fetched = (items) => {
+export const fetched = (tickets) => {
     return {
         type: FETCHED,
-        payload: items
+        payload: tickets
     }
 }
 

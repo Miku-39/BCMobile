@@ -27,6 +27,10 @@
         "CAMERA_ROLL"
       ]
     },
-    "description": ""
+    "description": "",
+    "platforms": [
+      "android",
+      "ios"
+    ]
   }
 }

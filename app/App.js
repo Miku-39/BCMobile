@@ -14,7 +14,7 @@ import VisitorScreen from './containers/VisitorScreen'
 import ServiceScreen from './containers/ServiceScreen'
 import GoodsScreen from './containers/GoodsScreen'
 import TicketScreen from './containers/TicketScreen'
-import CheckpointScreen from './containers/Checkpoint'
+import CheckpointScreen from './containers/CheckpointScreen'
 import api from './middleware/api'
 import { Metrics, Colors } from './theme'
 

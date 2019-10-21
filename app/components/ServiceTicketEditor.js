@@ -9,6 +9,7 @@ import ImagePickerComponent from '../components/ImagePicker'
 import DatePickerComponent from '../components/DatePicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Colors } from '../theme'
+import PickerComponent from '../components/PickerAlternate'
 
 export default class ServiceScreen extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class ServiceScreen extends Component {
 
   render () {
     Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.allowFontScaling = true;
+    //Text.defaultProps.allowFontScaling = true;
     return (
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
         <KeyboardAwareScrollView
@@ -41,6 +42,15 @@ export default class ServiceScreen extends Component {
                 <View style={styles.fieldsContainer}>
                   <Text style={styles.field}>В инженерную службу Арендодателя</Text>
                 </View>
+
+                {this.props.session.isLesnaya &&
+                <View style={styles.fieldsContainer}>
+                <PickerComponent
+                    label="Здание"
+                    removeEmptyField={true}
+                    items={this.props.lesnayaDepartments}
+                    onUpdate={(text) => {this.updateField(text, 'department')}}/>
+                </View>}
 
                 <View>
                 <Fumi

@@ -66,7 +66,7 @@ export default class VisitorTicketEditor extends Component {
 
   render () {
     Text.defaultProps = Text.defaultProps || {};
-    Text.defaultProps.allowFontScaling = true;
+    //Text.defaultProps.allowFontScaling = true;
     const { ticketType } = this.props
     return (
         <View style={{ flexGrow: 1, flexDirection: 'column', justifyContent: 'center'}}>
@@ -105,6 +105,12 @@ export default class VisitorTicketEditor extends Component {
                         placeholder="Выберите дату"
                         />
                       }
+                      {this.props.session.isLesnaya &&
+                      <PickerComponent
+                          label="Здание"
+                          removeEmptyField={true}
+                          items={this.props.lesnayaDepartments}
+                          onUpdate={(text) => {this.updateField(text, 'department')}}/>}
                   </View>
 
                   <View style={styles.fieldsContainer}>

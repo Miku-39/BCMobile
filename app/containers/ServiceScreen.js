@@ -19,6 +19,7 @@ import { add, addFile, dismiss } from '../middleware/redux/actions/Ticket'
 
 import { getSession } from '../middleware/redux/selectors'
 const NEW_TICKET_STATUS_ID = '4285215000';
+const ACCEPTED_TICKET_STATUS_ID = '12884953000';
 
 const CARD_TICKET_TYPE = '437149164000';
 const SERVICE_TICKET_TYPE = '3724900074000'
@@ -40,7 +41,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
         fileAdded: selectors.getIsFileAdded(store),
         fileId: selectors.getFileId(store),
         error: selectors.getIsTicketAddingFailed(store),
-        session: getSession(store)
+        session: selectors.getSession(store)
     }),
     dispatch => ({
         addTicket: (ticket) => dispatch(add(ticket)),
@@ -85,6 +86,13 @@ export default class ServiceScreen extends Component {
             type: ticketTypeId,
             client: companyId,
             photo: null
+        }
+
+        if(session.isLesnaya){
+          ticket.department = session.department
+          ticket.asignee = '4051732437000' //Альфаком
+          ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
         }
 
         this.setState({ticket: ticket,
@@ -164,7 +172,15 @@ export default class ServiceScreen extends Component {
            ticketType, session} = this.state
         const { isAdding, fileIsAdding } = this.props
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.allowFontScaling = false;
+
+        const lesnayaDepartments = [
+          { name: "БЦ Лесная 43", id: "3959751378000" },
+          { name: "БЦ Цветной Бульвар", id: "4006045944000" }
+        ]
+
+        if(session.department == "4006045944000")
+          lesnayaDepartments[0], lesnayaDepartments[1] = lesnayaDepartments[1], lesnayaDepartments[0]
+        //Text.defaultProps.allowFontScaling = false;
         return (
             <Loader message='Сохранение' isLoading={isAdding || fileIsAdding}>
                 <ServiceTicketEditor
@@ -173,6 +189,8 @@ export default class ServiceScreen extends Component {
                     saveFile={this.saveFile}
                     fieldsHighlights={this.state.fieldsHighlights}
                     ticketType={ticketType}
+                    session={session}
+                    lesnayaDepartments={lesnayaDepartments}
                 />
             </Loader>
         )

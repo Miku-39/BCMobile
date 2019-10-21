@@ -19,7 +19,8 @@ import { getSession } from '../middleware/redux/selectors'
 import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStorage'
 
 const NEW_TICKET_STATUS_ID = '4285215000';
-const VISITOR_TICKET_TYPE = '393629546000';
+const ACCEPTED_TICKET_STATUS_ID = '12884953000';
+const VISITOR_TICKET_TYPE = '393629542000';
 const CAR_TICKET_TYPE = '393629546000';
 
 const headerButtonsHandler = { save: () => null }
@@ -36,7 +37,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
         isAdding: selectors.getIsTicketAdding(store),
         added: selectors.getIsTicketAdded(store),
         error: selectors.getIsTicketAddingFailed(store),
-        session: getSession(store)
+        session: selectors.getSession(store)
     }),
     dispatch => ({
         addTicket: (ticket) => dispatch(add(ticket)),
@@ -71,12 +72,31 @@ export default class VisitorScreen extends Component {
             actualCreationDate: nowDate,
             visitDate: nowDate,
             author: employeeId,
-            status: NEW_TICKET_STATUS_ID,
+            status: ACCEPTED_TICKET_STATUS_ID,
             type: ticketType == 'VISITOR' ? VISITOR_TICKET_TYPE : CAR_TICKET_TYPE,
             client: companyId,
             nonstandardCarNumber: true,
-            longTerm: false
+            longTerm: false,
+            department: session.isLesnaya ? session.department : null
         }
+
+        console.log(session.isLesnaya)
+        if(session.isLesnaya){
+          ticket.department = session.department
+          if(ticketType == 'VISITOR'){
+            ticket.status = ACCEPTED_TICKET_STATUS_ID
+          }
+          if(ticketType == 'CAR'){
+            ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+            ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+          }
+          if((session.roles.includes('administatorBC') ||
+              session.roles.includes('restrictedAdministatorBC')) &&
+              session.roles.includes('makingAgreementBC')){
+                ticket.status = ACCEPTED_TICKET_STATUS_ID //Если один из администраторов
+              }
+        }
+
         const fieldsHighlights = {}
 
         this.setState({ticket: ticket, showCarFields: showCarFields,
@@ -169,8 +189,17 @@ export default class VisitorScreen extends Component {
           { name: "18:00-20:00", id: "4101841258000" },
           { name: "20:00-6:00",  id: "4067716412000" }
         ]
+
+        const lesnayaDepartments = [
+          { name: "БЦ Лесная 43", id: "3959751378000" },
+          { name: "БЦ Цветной Бульвар", id: "4006045944000" }
+        ]
+
+        if(session.department == "4006045944000")
+          lesnayaDepartments[0], lesnayaDepartments[1] = lesnayaDepartments[1], lesnayaDepartments[0]
+
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.allowFontScaling = false;
+        //Text.defaultProps.allowFontScaling = false;
         carParkings = session.carParkings.sort((first, second) => {
           return first.name > second.name ? 1 : -1
         })
@@ -178,6 +207,7 @@ export default class VisitorScreen extends Component {
             <Loader message='Сохранение' isLoading={isAdding}>
                 <VisitorTicketEditor
                     ticket={ticket}
+                    session={session}
                     updateLongTerm={this.updateLongTerm}
                     updateField={this.updateField}
                     saveFile={this.saveFile}
@@ -187,6 +217,7 @@ export default class VisitorScreen extends Component {
                     times={times}
                     carParkings={carParkings}
                     services={session.services}
+                    lesnayaDepartments={lesnayaDepartments}
                 />
             </Loader>
         )

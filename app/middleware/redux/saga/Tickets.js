@@ -9,33 +9,44 @@ function * fetchTicketsSaga() {
     yield put(isFetching())
     const store = yield select()
     const session = getSession(store)
-    var response
     try {
-        var regularTickets = []
-        var onCreatetickets = []
-        var openTickets = []
-
-        if(session.roles.includes('mobileCheckpoint')){
-          regularTickets = (yield call(api.fetchTicketsForCheckpoint, session.companyId)).data
-        }else{
-          regularTickets = (yield call(api.fetchAllTickets, session.companyId)).data
-        }
+        var regularTicketsResponse
+        var onCreateTicketsResponse
+        var openTicketsResponse
 
         if(session.isLesnaya){
-          onCreatetickets = (yield call(api.fetchOnCreateTickets, companyId)).data
-          openTickets = (yield call(api.fetchOpenTickets, companyId)).data
+          //onCreateTicketsResponse = yield call(api.fetchOnCreateTickets, session.companyId)
+          openTicketsResponse = yield call(api.fetchOpenTickets, session.companyId)
+        }else{
+          if(session.roles.includes('mobileCheckpoint')){
+            regularTicketsResponse = yield call(api.fetchTicketsForCheckpoint, session.companyId)
+          }else{
+            regularTicketsResponse = yield call(api.fetchAllTickets, session.companyId)
+          }
+
+          if(session.roles.includes('bolshevikSecurityChief')){
+            regularTicketsResponse = yield call(api.fetchTicketsForSecurityChief, session.companyId)
+          }
         }
 
-        const tickets = {
-          regularTickets: regularTickets,
-          onCreatetickets: onCreatetickets,
-          openTickets: openTickets
+        var tickets = {
+          regularTickets: regularTicketsResponse ? regularTicketsResponse.data : [],
+          //onCreateTickets: onCreateTicketsResponse ? onCreateTicketsResponse.data : [],
+          openTickets: openTicketsResponse ? openTicketsResponse.data : []
         }
-
+        if(tickets.openTickets){
+          tickets.onCreateTickets = tickets.openTickets.filter((ticket) => {
+            if(ticket.status.id == '4285215000'){
+              if(session.roles.includes('restrictedAdministratorBC')){
+                return ticket.department == session.departmentId
+              } else { return true }
+            } else { return false }
+          })
+        }
+        yield put(fetched(tickets))
         yield put(fetched(tickets))
     }
     catch(error) {
-      console.log(error)
         yield put(fetchFailed(error))
     }
 }

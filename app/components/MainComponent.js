@@ -29,9 +29,6 @@ export default MainComponent = (props) => {
                 </View>*/
             }
                   <View style={styles.contentContainer} onLayout={() => {LayoutAnimation.easeInEaseOut();}}>
-                    <View style={styles.fieldsContainer}>
-                      <Text style={styles.field}>Заявки</Text>
-                    </View>
 
 
                     <TouchableOpacity onPress={() => { props.addVisitTicket() }}>
@@ -69,19 +66,19 @@ export default MainComponent = (props) => {
                         </View>
                     </TouchableOpacity>
 
-                    {!session.isLesnaya &&
-                    <TouchableOpacity onPress={() => { props.openTickets() }}>
+                    {(session.isLesnaya && !session.roles.includes('tenant')) &&
+                    <TouchableOpacity onPress={() => { props.openTickets('onCreateTickets') }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
-                            <Text style={styles.buttonLabel}>Наши{"\n"}заявки</Text>
+                            <Text style={styles.buttonLabel}>Согласовать</Text>
                         </View>
                     </TouchableOpacity>}
 
-                    {session.isLesnaya &&
-                    <TouchableOpacity onPress={() => { props.openTickets(true) }}>
+                    {!(session.isLesnaya && session.roles.includes('tenant')) &&
+                    <TouchableOpacity onPress={() => { props.openTickets(session.isLesnaya ? 'openTickets' : 'regularTickets') }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
-                            <Text style={styles.buttonLabel}>Новые{"\n"}заявки</Text>
+                            <Text style={styles.buttonLabel}>Наши заявки</Text>
                         </View>
                     </TouchableOpacity>}
 

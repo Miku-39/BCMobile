@@ -36,7 +36,7 @@ export default class MainScreenContainer extends Component {
               addCardTicket={() => navigate('Service', {ticketType: 'CARD'})}
               addGoodsTicket={(type) => navigate('Goods', {ticketType: type})}
               addServiceTicket={() => navigate('Service', {ticketType: 'SERVICE'})}
-              openTickets={() => navigate('Tickets')}
+              openTickets={(type) => navigate('Tickets', {type: type})}
               session={session}
           />
         )

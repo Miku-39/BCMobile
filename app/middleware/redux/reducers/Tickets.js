@@ -16,12 +16,11 @@ export default ticketsReducer = (state = initialState, action) => {
             return state.merge({isFetching: false, fetched: false, error: null})
 
         case IS_FETCHING:
-        console.log('fetching')
             return state.merge({isFetching: true})
 
         case FETCHED:
-        console.log('fetched')
-            return state.merge({isFetching: false, fetched: true, tickets: action.payload, items: action.payload.regularTickets})
+            return state.merge({isFetching: false, fetched: true, tickets: action.payload,
+               items: action.payload.regularTickets ? action.payload.regularTickets : []})
 
         case FETCH_FAILED:
             return state.merge({isFetching: false, error: action.payload})

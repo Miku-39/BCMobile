@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View,
+  LayoutAnimation,
+  NativeModules } from 'react-native'
 import { Colors } from '../theme'
 import Ticket from '../components/Ticket'
 const fieldsProperties = [
 {
+  status:             { name: 'Статус', type: 'list' },
   type:               { name: 'Вид', type: 'list' },
   khimkiRequestType:  { name: 'Тип', type: 'list' },
   visitDate:          { name: 'Дата', type: 'date' },
@@ -35,6 +38,10 @@ const fieldsProperties = [
 }
 ]
 
+const { UIManager } = NativeModules;
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 export default class TicketScreen extends Component {
     static navigationOptions = ({navigation}) => {
@@ -45,12 +52,30 @@ export default class TicketScreen extends Component {
         })
     }
 
+    componentWillMount(){
+      const { ticket } = this.props.navigation.state.params
+      this.setState({ticket: ticket})
+    }
+
+    componentWillReceiveProps(nextProps) {
+      const { ticket } = this.props.navigation.state.params
+      this.setState({ticket: ticket})
+    }
+
+    updateItem = (ticket) => {
+      const { updateItem } = this.props.navigation.state.params
+      updateItem(ticket)
+      LayoutAnimation.easeInEaseOut();
+      this.setState({ticket: ticket})
+    }
+
     render() {
-      const {ticket, status2colors} = this.props.navigation.state.params
         return (
             <View style={{flex: 1}}>
-                <Ticket ticket={ticket}
-                        fieldsProperties={fieldsProperties}/>
+                <Ticket ticket={this.state.ticket}
+                        fieldsProperties={fieldsProperties}
+                        updateItem={this.updateItem}
+                        goBack={this.props.navigation.goBack}/>
             </View>
         )
     }

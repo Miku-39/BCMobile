@@ -78,7 +78,7 @@ export default class ServiceScreen extends Component {
               break;
         }
 
-        const ticket = {
+        var ticket = {
             visitorFullName: '',
             actualCreationDate: new Date(),
             author: employeeId,
@@ -127,6 +127,12 @@ export default class ServiceScreen extends Component {
     save = () => {
         const { ticket } = this.state
         const { ticketType } = this.props.navigation.state.params
+        const { session } = this.props
+
+        if(session.isLesnaya){
+          ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+        }
 
         var fieldsHighlights = {
           whatHappened: !ticket.whatHappened

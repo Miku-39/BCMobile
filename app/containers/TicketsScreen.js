@@ -7,6 +7,7 @@ import { View,
   Keyboard,
   StyleSheet,
   FlatList,
+  NativeModules,
   LayoutAnimation,
   Platform
 } from 'react-native'
@@ -16,6 +17,7 @@ import { connect } from 'react-redux'
 
 import { Metrics, Colors } from '../theme'
 import { fetch } from '../middleware/redux/actions/Tickets'
+import { update, dismiss } from '../middleware/redux/actions/Ticket'
 import { getTickets, getTicket, getSession } from '../middleware/redux/selectors'
 import Loader from '../components/Loader'
 
@@ -23,8 +25,10 @@ const headerButtonsHandler = {
     refresh: () => null,
     search: () => null
 }
-const CAME_STATUS_ID = '421575460000'
-const WENT_STATUS_ID = '421575453000'
+const statusNames = {
+  '421575459000': 'Отклонена',
+  '12884953000': 'Принята'
+}
 
 const status2colors = {
     null: 'gray',
@@ -42,18 +46,38 @@ const goodsTypes = {
   '4022223527000': 'Ввоз'
 }
 
+const { UIManager } = NativeModules;
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+
 @connect(
     store => ({
         tickets: getTickets(store),
         ticket: getTicket(store),
         session: getSession(store)
     }),
-    { fetch }
+    { fetch, update, dismiss }
 )
 export default class TicketsScreen extends Component {
     static navigationOptions = ({navigation}) => {
+    const { type } = navigation.state.params
+    var title
+    switch(type){
+      case 'onCreateTickets':
+      title = 'Согласовать';
+      break;
+
+      case 'regularTickets':
+      title = 'Заявки';
+      break;
+
+      case 'openTickets':
+      title = 'Активные';
+      break;
+    }
         return ({
-            title: 'Заявки',
+            title: title,
             headerRight: (
                 <View style={{flexDirection: 'row', paddingRight: 7}}>
                     <TouchableOpacity onPress={() => headerButtonsHandler.refresh()}>
@@ -72,26 +96,46 @@ export default class TicketsScreen extends Component {
         searchBarIsShown: false
     }
 
-    componentWillMount() {
-        const { session } = this.props
-        console.log(session)
-        this.setState({session: session})
-    }
-
     componentDidMount () {
         headerButtonsHandler.search = this._handleShowSearchBarClick
         headerButtonsHandler.refresh = this._handleRefreshClick
+        if(Platform.OS != 'android')
+          LayoutAnimation.easeInEaseOut();
         this.props.fetch()
     }
 
     componentWillReceiveProps (nextProps) {
-        const { regularTickets, openTickets, onCreatetickets } = nextProps.tickets.tickets
-        const { session } = this.state
-        var tickets = regularTickets
-        if(session.isLesnaya && session.roles.includes('administratorBC') && session.roles.includes('makingAgreementBC')){
-          tickets = this.props.isAdditionalList ? onCreatetickets : openTickets
-        }
-        this.setState({ items: tickets })
+      const { session, tickets } = this.props
+      const { type } = this.props.navigation.state.params
+      items = tickets.tickets[type]
+      items = items ? items : []
+      if(Platform.OS != 'android')
+        LayoutAnimation.easeInEaseOut();
+      this.setState({session: session, items: items})
+
+      const { updated } = nextProps.ticket
+      if (updated) {
+          Alert.alert( 'Изменение статуса', 'Статус заявки успешно изменен', [
+              {text: 'Закрыть', onPress: () => {}}
+          ])
+      }
+
+    }
+
+    refresh = () => {
+      this.props.fetch()
+    }
+
+    updateItem = (ticket) => {
+      console.log('update')
+      var { items } = this.state
+      const itemIndex = items.findIndex(item => item.id == ticket.id)
+      items[itemIndex].status = ticket.status
+      LayoutAnimation.easeInEaseOut();
+      this.setState({items: items})
+      this.props.update(ticket)
+      this.props.fetch()
+      return true
     }
 
     _handleRefreshClick = () => {
@@ -113,7 +157,9 @@ export default class TicketsScreen extends Component {
 
     _handleSearchTextChanged = (text) => {
         const search = text.toLowerCase()
-        const { items } = this.props.tickets
+        const { tickets } = this.props
+        const { type } = this.props.navigation.state.params
+        items = tickets.tickets[type]
 
         data = items.filter( item => {
           containsSearch = false
@@ -136,18 +182,21 @@ export default class TicketsScreen extends Component {
     renderItem = ({item}) => {
       const { navigation } = this.props
       const header = item.number + ', ' + item.status.name.toString().toLowerCase()
-      const name = item.visitorFullName ? item.visitorFullName : ' '
+      var name = item.visitorFullName ? item.visitorFullName : ' '
+
+      if(!item.visitorFullName && item.carNumber)
+        name = item.carNumber;
+
       try {
       try{
       var type = item.type && item.type.name + ' ' + item.visitDate.substring(0, 10)
-      if((item.type.id == '393629549000') && item.KhimkiRequestType){ type = goodsTypes[item.KhimkiRequestType.id] + ' ' + item.visitDate.substring(0, 10) }
       }catch{ type = item.type && item.type.name + '' }
       return(
 
-      <View style={{width: '100%', marginBottom: 5}}>
-      <TouchableHighlight onPress={() => {navigation.navigate('Ticket', {ticket: item})}} underlayColor={Colors.accentColor} style={{borderRadius: 10}}>
+      <View style={{margin: 5, marginTop: 0}}>
+      <TouchableHighlight onPress={() => {navigation.navigate('Ticket', {ticket: item, updateItem: this.updateItem})}} underlayColor={Colors.accentColor} style={{borderRadius: 10}}>
       <View style={{flexDirection: 'row', backgroundColor: 'white', borderRadius: 10}}>
-          <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderRadius: 5}}></View>
+          <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderBottomLeftRadius: 10, borderTopLeftRadius: 10}}></View>
           <View style={{flexDirection: 'column', marginLeft: 5}}>
 
               <Text style={styles.ticketNumber}>{header}</Text>
@@ -164,7 +213,7 @@ export default class TicketsScreen extends Component {
 
     render() {
         Text.defaultProps = Text.defaultProps || {};
-        //Text.defaultProps.allowFontScaling = true;
+        Text.defaultProps.allowFontScaling = true;
         const { navigation } = this.props
         const { items, searchBarIsShown } = this.state
         const { isFetching, fetched } = this.props.tickets

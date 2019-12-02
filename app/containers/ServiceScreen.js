@@ -79,7 +79,6 @@ export default class ServiceScreen extends Component {
         }
 
         var ticket = {
-            visitorFullName: '',
             actualCreationDate: new Date(),
             author: employeeId,
             status: NEW_TICKET_STATUS_ID,
@@ -91,8 +90,9 @@ export default class ServiceScreen extends Component {
         if(session.isLesnaya){
           ticket.department = session.department
           ticket.asignee = '4051732437000' //Альфаком
-          ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          //ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
           ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+          ticket.status = ticket.department == '3959751378000' ? ACCEPTED_TICKET_STATUS_ID : ticket.status
         }
 
         this.setState({ticket: ticket,
@@ -130,9 +130,11 @@ export default class ServiceScreen extends Component {
         const { session } = this.props
 
         if(session.isLesnaya){
-          ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          //ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
           ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
         }
+
+        console.log(ticket)
 
         var fieldsHighlights = {
           whatHappened: !ticket.whatHappened

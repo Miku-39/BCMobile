@@ -3,12 +3,12 @@
     "sdkVersion": "33.0.0",
     "name": "Кларис",
     "icon": "./app/theme/images/claris_service_desk-logo.png",
-    "version": "2.0",
+    "version": "3.0",
     "slug": "claris-business-centers",
     "ios": {
-      "bundleIdentifier": "ru.altsoft.saas.bcmobile",
+      "bundleIdentifier": "ru.altsoft.saas.bcm",
       "icon": "./app/theme/images/appstorelogo2.png",
-      "buildNumber": "2.0"
+      "buildNumber": "3.0"
     },
     "splash": {
       "image": "./app/theme/images/splash.png",

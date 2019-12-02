@@ -30,11 +30,12 @@ export default class VisitorTicketEditor extends Component {
        selectedValue: null,
        //selectedParking: this.props.initialParking,
        fieldsVisible: {
-         parkingPlace: true
+         parkingPlace: true,
+         expirationDate: false,
        },
-       'expirationDate': false,
+       expirationDate: null,
        //'additionalFieldsVisible': false,
-       'carFieldsVisible': this.props.ticketType == 'CAR',
+       carFieldsVisible: this.props.ticketType == 'CAR',
        longTerm: false,
      }
   }
@@ -99,7 +100,7 @@ export default class VisitorTicketEditor extends Component {
                       {this.state.longTerm &&
                       <DatePickerComponent
                         isHighlighted={this.props.fieldsHighlights.expirationDate}
-                        date={this.props.ticket.visitDate ? this.props.ticket.visitDate : new Date()}
+                        date={this.props.ticket.expirationDate ? this.props.ticket.expirationDate : new Date()}
                         onUpdate={(date) => {this.updateField(date, 'expirationDate')}}
                         label="Действует до *"
                         placeholder="Выберите дату"

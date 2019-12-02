@@ -16,7 +16,11 @@ function * fetchTicketsSaga() {
 
         if(session.isLesnaya){
           //onCreateTicketsResponse = yield call(api.fetchOnCreateTickets, session.companyId)
-          openTicketsResponse = yield call(api.fetchOpenTickets, session.companyId)
+          if(session.roles.includes('restrictedAdministratorBC')){
+            openTicketsResponse = yield call(api.fetchOpenTicketsRestricted, session.companyId)
+          }else{
+            openTicketsResponse = yield call(api.fetchOpenTickets, session.companyId)
+          }
         }else{
           if(session.roles.includes('mobileCheckpoint')){
             regularTicketsResponse = yield call(api.fetchTicketsForCheckpoint, session.companyId)
@@ -43,6 +47,7 @@ function * fetchTicketsSaga() {
             } else { return false }
           })
         }
+        console.log(tickets)
         yield put(fetched(tickets))
         yield put(fetched(tickets))
     }

@@ -4,14 +4,15 @@ import { View,
   NativeModules } from 'react-native'
 import { Colors } from '../theme'
 import Ticket from '../components/Ticket'
+import * as selectors from '../middleware/redux/selectors'
+import { connect } from 'react-redux'
+
 const fieldsProperties = [
 {
   status:             { name: 'Статус', type: 'list' },
   type:               { name: 'Вид', type: 'list' },
-  khimkiRequestType:  { name: 'Тип', type: 'list' },
   visitDate:          { name: 'Дата', type: 'date' },
-  expirationDate:     { name: 'Действует до', type: 'date' },
-  khimkiTime:         { name: 'Время', type: 'list' }
+  expirationDate:     { name: 'Действует до', type: 'date' }
 }, {
   visitorFullName:    { name: 'ФИО посетителя', type: 'text' },
   khimkiEmailGuest:   { name: 'E-mail посетителя', type: 'text' },
@@ -30,7 +31,7 @@ const fieldsProperties = [
   materialValuesData: { name: 'Данные материальных ценностей', type: 'text' },
   khimkiAccessPremises:{ name: 'Маршрут перемещения', type: 'text' }
 }, {
-  whereHappened:      { name: 'Место', type: 'text' },
+  whereHappened:      { name: 'Где произошло', type: 'text' },
   whatHappened:       { name: 'Что сделать', type: 'text' }
 }, {
   note:               { name: 'Примечание', type: 'text' },
@@ -43,6 +44,13 @@ const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
+
+@connect(
+    store => ({
+        session: selectors.getSession(store)
+    })
+)
+
 export default class TicketScreen extends Component {
     static navigationOptions = ({navigation}) => {
         const { ticket } = navigation.state.params
@@ -54,6 +62,13 @@ export default class TicketScreen extends Component {
 
     componentWillMount(){
       const { ticket } = this.props.navigation.state.params
+      if(this.props.session.isLesnaya &&
+         (this.props.session.roles.includes('restrictedAdministratorBC') ||
+         this.props.session.roles.includes('administratorBC')) &&
+         this.props.session.roles.includes('makingAgreementBC'))
+      {
+           fieldsProperties[0]['company'] = { name: 'Арендатор', type: 'list' }
+      }
       this.setState({ticket: ticket})
     }
 

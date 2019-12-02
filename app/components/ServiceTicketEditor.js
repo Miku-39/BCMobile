@@ -49,7 +49,7 @@ export default class ServiceScreen extends Component {
                     label="Здание"
                     removeEmptyField={true}
                     items={this.props.lesnayaDepartments}
-                    onUpdate={(text) => {this.updateField(text, 'department')}}/>
+                    onUpdate={(text) => {this.props.updateField(text, 'department')}}/>
                 </View>}
 
                 <View>

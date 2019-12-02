@@ -39,6 +39,7 @@ const status2colors = {
     '4285215000': '#fd9419',//Создана
     '2804833189000': '#d12424',//Повторная
     '4285216000': '#808080',//Закрыта
+    '2237210852000': '#00A040',//выполняется
 }
 const goodsTypes = {
   '4022223559000': 'Перемещение',
@@ -187,6 +188,9 @@ export default class TicketsScreen extends Component {
       if(!item.visitorFullName && item.carNumber)
         name = item.carNumber;
 
+      if(item.type.id == '3724900074000')
+        name = item.whatHappened;
+
       try {
       try{
       var type = item.type && item.type.name + ' ' + item.visitDate.substring(0, 10)
@@ -197,7 +201,7 @@ export default class TicketsScreen extends Component {
       <TouchableHighlight onPress={() => {navigation.navigate('Ticket', {ticket: item, updateItem: this.updateItem})}} underlayColor={Colors.accentColor} style={{borderRadius: 10}}>
       <View style={{flexDirection: 'row', backgroundColor: 'white', borderRadius: 10}}>
           <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderBottomLeftRadius: 10, borderTopLeftRadius: 10}}></View>
-          <View style={{flexDirection: 'column', marginLeft: 5}}>
+          <View style={{flexDirection: 'column', marginLeft: 5, width: '90%'}}>
 
               <Text style={styles.ticketNumber}>{header}</Text>
               <Text style={styles.visitorName}>{name}</Text>

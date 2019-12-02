@@ -5,7 +5,9 @@ const images = {
   list: require('./images/list.png'),
   wrench: require('./images/wrench.png'),
   boxIn: require('./images/boxIn.png'),
-  card: require('./images/card.png')
+  boxOut: require('./images/boxOut.png'),
+  card: require('./images/card.png'),
+  sign: require('./images/sign.png')
 }
 
 export default images;

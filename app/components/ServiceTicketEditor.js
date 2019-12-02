@@ -40,7 +40,7 @@ export default class ServiceScreen extends Component {
               marginRight: 5}}>
 
                 <View style={styles.fieldsContainer}>
-                  <Text style={styles.field}>В инженерную службу Арендодателя</Text>
+                  <Text style={styles.field}>Сервисная заявка</Text>
                 </View>
 
                 {this.props.session.isLesnaya &&
@@ -49,7 +49,7 @@ export default class ServiceScreen extends Component {
                     label="Здание"
                     removeEmptyField={true}
                     items={this.props.lesnayaDepartments}
-                    onUpdate={(text) => {this.updateField(text, 'department')}}/>
+                    onUpdate={(text) => {this.props.updateField(text, 'department')}}/>
                 </View>}
 
                 <View>

@@ -65,7 +65,7 @@ export default class VisitorScreen extends Component {
         const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         const nowDate = new Date();
-        const ticket = {
+        var ticket = {
             visitorFullName: '',
             carModelText: '',
             carNumber: '',
@@ -80,7 +80,6 @@ export default class VisitorScreen extends Component {
             department: session.isLesnaya ? session.department : null
         }
 
-        console.log(session.isLesnaya)
         if(session.isLesnaya){
           ticket.department = session.department
           if(ticketType == 'VISITOR'){
@@ -90,11 +89,6 @@ export default class VisitorScreen extends Component {
             ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
             ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
           }
-          if((session.roles.includes('administatorBC') ||
-              session.roles.includes('restrictedAdministatorBC')) &&
-              session.roles.includes('makingAgreementBC')){
-                ticket.status = ACCEPTED_TICKET_STATUS_ID //Если один из администраторов
-              }
         }
 
         const fieldsHighlights = {}
@@ -130,7 +124,15 @@ export default class VisitorScreen extends Component {
     save = () => {
         const { ticket } = this.state
         const { ticketType } = this.props.navigation.state.params
-        if(!ticket.khimkiTime){ticket.khimkiTime = '4067716405000'}
+        const { session } = this.props
+
+        if(session.isLesnaya){
+          if(ticketType == 'CAR'){
+            ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+            ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+          }
+        }
+
         var fieldsHighlights = {
           expirationDate: (ticket.longTerm && !ticket.expirationDate),
           visitorFullName: !ticket.visitorFullName && ticketType == 'VISITOR',

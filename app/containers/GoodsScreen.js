@@ -62,20 +62,20 @@ export default class GoodsScreen extends Component {
 
 
     componentWillMount() {
-        const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
+        const { ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         const goodsTicketTypes = { "GOODS_IN": "393629549000",
                                    "GOODS_OUT": "421534163000" }
 
         const nowDate = new Date();
-        const ticket = {
+        var ticket = {
             visitorFullName: '',
             carModelText: '',
             carNumber: '',
             actualCreationDate: nowDate,
             visitDate: nowDate,
             author: employeeId,
-            status: ACCEPTED_TICKET_STATUS_ID,
+            status: NEW_TICKET_STATUS_ID,
             type: goodsTicketTypes[ticketType],
             client: companyId,
             nonstandardCarNumber: true,
@@ -83,24 +83,16 @@ export default class GoodsScreen extends Component {
             longTerm: false
         }
 
-        console.log(ticket.type)
 
         if(session.isLesnaya){
           ticket.department = session.department
-          if((session.roles.includes('administatorBC') ||
-              session.roles.includes('restrictedAdministatorBC')) &&
-              session.roles.includes('makingAgreementBC')){
-                ticket.status = ACCEPTED_TICKET_STATUS_ID //Если один из администраторов
-              }else{
-                ticket.status = ticket.department == '4006045944000' ? NEW_TICKET_STATUS_ID : ACCEPTED_TICKET_STATUS_ID
-              }
+          ticket.status = ticket.department == '4006045944000' ? NEW_TICKET_STATUS_ID : ACCEPTED_TICKET_STATUS_ID
           ticket.manager = ticket.department == '4006045944000' ? '3959752571000' : null //если ЦБ, то Татаринова
         }
 
         const fieldsHighlights = {}
 
-        this.setState({ticket: ticket, showCarFields: showCarFields,
-           showGoodsFields: showGoodsFields,
+        this.setState({ticket: ticket,
            ticketType: ticketType, session: session, fieldsHighlights: fieldsHighlights})
     }
 
@@ -131,6 +123,12 @@ export default class GoodsScreen extends Component {
     save = () => {
         const { ticket } = this.state
         const { ticketType } = this.props.navigation.state.params
+        const { session } = this.props
+
+        if(session.isLesnaya){
+          ticket.status = ticket.department == '4006045944000' ? NEW_TICKET_STATUS_ID : ACCEPTED_TICKET_STATUS_ID
+          ticket.manager = ticket.department == '4006045944000' ? '3959752571000' : null //если ЦБ, то Татаринова
+        }
 
         var fieldsHighlights = {
           materialValuesData: !ticket.materialValuesData,

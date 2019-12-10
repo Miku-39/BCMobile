@@ -7,6 +7,7 @@ export default class SwipeoutElement extends React.PureComponent {
     handleAction = () => this.props.handleAction(this.props.item)
 
     render() {
+      console.log('quack')
         const { item } = this.props
         return (
                 <TouchableOpacity onPress={this.handleAction} style={{backgroundColor: '#8d47d3', margin: 1, height: 98, width: 78, justifyContent: 'center', alignItems: 'center', borderRadius: 15, marginRight: 1}}>

@@ -128,7 +128,6 @@ export default class TicketsScreen extends Component {
     }
 
     updateItem = (ticket) => {
-      console.log('update')
       var { items } = this.state
       const itemIndex = items.findIndex(item => item.id == ticket.id)
       items[itemIndex].status = ticket.status

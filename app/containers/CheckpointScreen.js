@@ -55,8 +55,7 @@ export default class CheckpointScreen extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { items, fetched } = nextProps.tickets
-        this.setState({ items: items.slice(0, 50) })
-
+        this.setState({ items: items.filter(item => item.type.id != '421534160000') })
         if (fetched)
             this.list.reloadData()
 

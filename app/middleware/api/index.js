@@ -1,7 +1,7 @@
 import axios from 'axios'
 import querystring from 'querystring'
 
-export const API_SERVER_URL = 'http://api.claris.su/main/'
+export const API_SERVER_URL = 'https://api.claris.su/main/'
 
 const conf = {
     baseURL: API_SERVER_URL,
@@ -12,7 +12,7 @@ const conf = {
 const instance = axios.create(conf)
 
 const onError = (error) => {
-  console.log(error)
+  console.error(error)
   if (error.response) {
     console.warn('axios onError', error.response)
 
@@ -58,12 +58,12 @@ const fetchAllTickets = companyId => instance.get('vNext/v1/requests?orderBy=num
 const fetchOnCreateTickets = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=RequestsForUserDepartment,OnCreateRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 const fetchOpenTicketsRestricted = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=RequestsForUserDepartment,NotClosedRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 const fetchOpenTickets = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=NotClosedRequests&pageSize=100&pageNumber=1', conf).catch(onError)
-
-
+const getFileLink = fileId => instance.post(`vNext/v1/files/${fileId}`)
 const updateTicketStatus = (ticket) => instance.patch(`/vnext/v1/requests/${ticket.id}`, {status: ticket.status})
 
 const addTicket = (ticket) => instance.post('/vNext/v1/requests', ticket).catch(onError)
 
 export default { login, authorize, setAuthHeader,
                  fetchParkingsForCars, /*fetchParkingsForGoods,*/ fetchAllTickets, updateTicketStatus,
-                 addTicket, addFile, fetchTicketsForCheckpoint, fetchTicketsForSecurityChief, fetchOpenTickets, fetchOpenTicketsRestricted, fetchOnCreateTickets }
+                 addTicket, addFile, fetchTicketsForCheckpoint, fetchTicketsForSecurityChief, fetchOpenTickets,
+                  fetchOpenTicketsRestricted, fetchOnCreateTickets, getFileLink }

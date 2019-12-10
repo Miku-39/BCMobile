@@ -21,8 +21,10 @@ const fieldsProperties = [
   whoMeets:           { name: 'ФИО встречающего', type: 'text' },
   khimkiEmailMeeting: { name: 'E-mail встречающего', type: 'text' },
   phone:              { name: 'Телефон встречающего', type: 'text' }
-}, {
-  carNumber:          { name: 'Номер авто', type: 'text' },
+}, //{
+  //file:               { name: 'Файл', type: 'file'}
+//}, {
+{  carNumber:          { name: 'Номер авто', type: 'text' },
   carModelText:       { name: 'Модель авто', type: 'text' },
   parkingPlace:       { name: 'Место на парковке', type: 'text' },
   parking:            { name: 'Парковка', type: 'list' }

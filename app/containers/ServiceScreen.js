@@ -134,7 +134,6 @@ export default class ServiceScreen extends Component {
           ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
         }
 
-        console.log(ticket)
 
         var fieldsHighlights = {
           whatHappened: !ticket.whatHappened

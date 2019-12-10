@@ -47,7 +47,6 @@ function * fetchTicketsSaga() {
             } else { return false }
           })
         }
-        console.log(tickets)
         yield put(fetched(tickets))
         yield put(fetched(tickets))
     }

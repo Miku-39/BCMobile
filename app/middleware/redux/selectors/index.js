@@ -21,3 +21,7 @@ export const getFileId = store => store.ticket.get('fileId')
 export const getIsTicketAddingFailed = store => store.ticket.get('error')
 
 export const getIsFileAddingFailed = store => store.ticket.get('error')
+
+export const getIsFileDownloaded = store => store.ticket.get('fileDownloaded')
+
+export const getLink = store => store.ticket.get('link')

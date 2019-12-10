@@ -17,7 +17,7 @@ export default class TicketsListItem extends React.PureComponent {
             + `${item.visitorFullName ? ('Водитель: ' + item.visitorFullName + "\n\n") : ''}`
             + `${item.materialValuesData ? ('Груз: ' + item.materialValuesData + "\n\n") : ''}`
             + `${item.materialValuesSize == null ? '' : 'Габариты груза: '+ item.materialValuesSize + "\n\n"}`
-            + `${item.longterm ? ('Причина отклонения: ' + item.expirationDate + "\n\n") : ''}`
+            + `${item.longterm ? ('Срок действия: ' + item.expirationDate + "\n\n") : ''}`
             + `${item.rejectionReason ? ('Причина отклонения: ' + item.rejectionReason) : ''}`
           )}}
 
@@ -52,8 +52,10 @@ export default class TicketsListItem extends React.PureComponent {
                </View>
              )
            }
-           switch(item.type.shortName || item.type.id){
-             case 'Внос' || 'Вынос':
+           console.log(item.type.shortName + item.type.id)
+           switch(item.type.id){
+             case '393629549000':
+             case '421534163000':
              return (
                       <View style={{width: '100%'}}>
                       <TouchableHighlight onPress={showAlert} underlayColor='#8d47d3'>
@@ -81,7 +83,7 @@ export default class TicketsListItem extends React.PureComponent {
                   )
                   break;
 
-                  case 'Гость':
+                  case '393629542000':
                   return (
                     <View style={{width: '100%'}}>
                     <TouchableHighlight onPress={showAlert} underlayColor='#FFFFFF'>
@@ -104,7 +106,7 @@ export default class TicketsListItem extends React.PureComponent {
                   )
                   break;
 
-                  case 'Авто':
+                  case '393629546000':
                   return (
                     <View style={{width: '100%'}}>
                     <TouchableHighlight onPress={showAlert} underlayColor='#FFFFFF'>

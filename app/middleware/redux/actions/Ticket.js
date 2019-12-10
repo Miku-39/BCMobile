@@ -11,6 +11,10 @@ export const ADDED = 'added'
 export const FILE_ADDED = 'fileAdded'
 export const ADDING_FAILED = 'addingFailed'
 export const FILE_ADDING_FAILED = 'fileAddingFailed'
+export const GET_FILE_REQUEST = 'getFile'
+export const FILE_DOWNLOADED = 'fileDownloaded'
+export const FILE_DOWNLOADING_FAILED = 'fileDownloadingFailed'
+export const FILE_IS_DOWNLOADING = 'fileIsDownloading'
 
 
 export const update = (ticket) => {
@@ -98,5 +102,33 @@ export const fileAddingFailed = (error) => {
     return {
         type: FILE_ADDING_FAILED,
         payload: error
+    }
+}
+
+export const getFile = (file) => {
+  return {
+      type: GET_FILE_REQUEST,
+      payload: file
+  }
+}
+
+export const fileIsDownloading = (fileIsDownloading) => {
+    return {
+        type: FILE_IS_DOWNLOADING,
+        payload: fileIsDownloading
+    }
+}
+
+export const fileDownloadingFailed = (error) => {
+    return {
+        type: FILE_DOWNLOADING_FAILED,
+        payload: error
+    }
+}
+
+export const fileDownloaded = (link) => {
+    return {
+        type: FILE_DOWNLOADED,
+        payload: link
     }
 }

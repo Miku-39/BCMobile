@@ -1,16 +1,18 @@
 import React, { Component } from 'react'
+import * as WebBrowser from 'expo-web-browser';
 import {  View,
   ScrollView,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert
+  Alert,
+  Linking
 } from 'react-native';
 import { Colors } from '../theme'
 import * as selectors from '../middleware/redux/selectors'
 import { connect } from 'react-redux'
 import { fetch } from '../middleware/redux/actions/Tickets'
-import { update, dismiss } from '../middleware/redux/actions/Ticket'
+import { update, dismiss, getFile } from '../middleware/redux/actions/Ticket'
 
 const statusNames = {
   '421575459000': 'Отклонена',
@@ -27,35 +29,67 @@ const allowedStatuses = [
   ON_CREATE_STATUS_ID
 ]
 
-  @connect(
-      store => ({
-          session: selectors.getSession(store)
-      }),
-      { fetch, update, dismiss }
-  )
+@connect(
+    store => ({
+        session: selectors.getSession(store),
+        error: selectors.getIsTicketAddingFailed(store),
+        fileDownloaded: selectors.getIsFileDownloaded(store),
+        link: selectors.getLink(store),
+    }),
+    dispatch => ({
+        dismiss: () => dispatch(dismiss()),
+        getFile: (fileId) => dispatch(getFile(fileId))
+    })
+)
 
 export default class Ticket extends React.Component {
   constructor(props) {
      super(props);
      this.state = {}
   }
-/*
-  componentWillReceiveProps (nextProps) {
-      const { updated } = nextProps.ticket
-      if (updated) {
-          Alert.alert( 'Внимание', 'Статус заявки успешно изменен', [
-              {text: 'Закрыть', onPress: () => {
-                  this.props.dismiss()
-              }}
-          ])
-      }
+
+  componentWillReceiveProps(newProps) {
+    const { fileDownloaded, fileDownloadingFailed, error, link } = newProps
+
+    if (link){
+        console.log(`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`)
+        //WebBrowser.openBrowserAsync(
+          //`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`
+        //);
+        //Linking.openURL(
+          //`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`
+        //)
+        const receiptUrl = 'https://api.claris.su/main/vNext/v1/files?downloadId='+link
+
+        Linking.canOpenURL(receiptUrl).then(supported => {
+          if (supported) {
+            Linking.openURL(receiptUrl);
+          } else {
+            Alert.alert(
+              "Ошибка",
+              "Не удалось найти программу, чтобы открыть файл данного формата",
+              [{ text: "Закрыть", onPress: () => {} }]
+            );
+          }
+        });
+
+    }
+
+    if (error) {
+        Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
+        [{text: 'Закрыть', onPress: () => { }}])
+    }
   }
-*/
 
   render () {
     Text.defaultProps = Text.defaultProps || {};
     Text.defaultProps.allowFontScaling = true;
     const { fieldsProperties, changeStatus, ticket } = this.props
+
+    const handleShowFilePress = () => {
+      this.props.getFile(ticket.file.id)
+    }
+
     const updateStatus = (status) => {
       Alert.alert(
       'Изменение статуса',
@@ -101,9 +135,15 @@ export default class Ticket extends React.Component {
                             <Text style={styles.field}>{value.substring(0, 10)}</Text>
                         </View>)
           }
+          if(fieldGroup[key].type == 'file'){
+            fields.push(<View>
+                            <Text style={styles.fieldTitle}>{fieldGroup[key].name}</Text>
+                            <Text onPress={() => {handleShowFilePress()}} style={[styles.field, {color: '#006699'}]}>{value.name}</Text>
+                        </View>)
+          }
 
       }
-    }catch(err){console.warn(err.message)}})
+    }catch(err){console.error(err.message)}})
 
       return(fields[0] ?
              <View style={styles.fieldsContainer}>

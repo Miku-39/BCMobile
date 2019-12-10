@@ -1,42 +1,55 @@
 import { call, put } from 'redux-saga/effects'
 
-import { isUpdating, updated, updateFailed, isAdding, fileIsAdding, added, fileAdded, addingFailed, fileAddingFailed } from '../actions/Ticket'
+import * as actions from '../actions/Ticket'
 import api from '../../api'
 
 
 export function * updateTicketSaga(action) {
-    yield put(isUpdating())
+    yield put(actions.isUpdating())
 
     try {
         const response = yield call(api.updateTicketStatus, action.payload)
-        yield put(updated())
+        yield put(actions.updated())
     }
     catch(error) {
-        yield put(updateFailed(error))
+        yield put(actions.updateFailed(error))
     }
 }
 
 export function * addTicketSaga(action) {
-    yield put(isAdding())
+    yield put(actions.isAdding())
 
     try {
         const response = yield call(api.addTicket, action.payload)
-        yield put(added())
+        yield put(actions.added())
     }
     catch(error) {
-        yield put(addingFailed(error))
+        yield put(actions.addingFailed(error))
     }
 }
 
 export function * addFileSaga(action){
-  yield put(fileIsAdding())
+  yield put(actions.fileIsAdding())
 
   try {
       const response = yield call(api.addFile, action.payload)
       const ticketId = response.data[0].id
-      yield put(fileAdded(ticketId))
+      yield put(actions.fileAdded(ticketId))
   }
   catch(error) {
-      yield put(fileAddingFailed(error))
+      yield put(actions.fileAddingFailed(error))
+  }
+}
+
+export function * getFileSaga(action){
+  yield put(actions.fileIsDownloading())
+  try {
+      const response = yield call(api.getFileLink, action.payload)
+      const link = response.data
+      yield put(actions.fileDownloaded(link.ticketId))
+  }
+  catch(error) {
+      //console.error(error)
+      yield put(actions.fileDownloadingFailed(error))
   }
 }

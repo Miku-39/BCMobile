@@ -107,6 +107,7 @@ export default class TicketsListItem extends React.PureComponent {
                   break;
 
                   case '393629546000':
+                  case '421534160000':
                   return (
                     <View style={{width: '100%'}}>
                     <TouchableHighlight onPress={showAlert} underlayColor='#FFFFFF'>

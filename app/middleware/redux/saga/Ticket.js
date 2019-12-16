@@ -45,8 +45,8 @@ export function * getFileSaga(action){
   yield put(actions.fileIsDownloading())
   try {
       const response = yield call(api.getFileLink, action.payload)
-      const link = response.data
-      yield put(actions.fileDownloaded(link.ticketId))
+      const link = response.data.url
+      yield put(actions.fileDownloaded(link))
   }
   catch(error) {
       //console.error(error)

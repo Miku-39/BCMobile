@@ -16,7 +16,7 @@ const headerButtonsHandler = {
     search: () => null
 }
 const CAME_STATUS_ID = '421575460000'
-const WENT_STATUS_ID = '421575453000'
+const WENT_STATUS_ID = '12884953000'
 
 @connect(
     store => ({
@@ -55,7 +55,7 @@ export default class CheckpointScreen extends Component {
 
     componentWillReceiveProps (nextProps) {
         const { items, fetched } = nextProps.tickets
-        this.setState({ items: items.filter(item => item.type.id != '421534160000') })
+        this.setState({ items: items })
         if (fetched)
             this.list.reloadData()
 

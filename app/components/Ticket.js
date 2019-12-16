@@ -52,15 +52,14 @@ export default class Ticket extends React.Component {
     const { fileDownloaded, fileDownloadingFailed, error, link } = newProps
 
     if (link){
-        console.log(`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`)
+        console.log(link)
         //WebBrowser.openBrowserAsync(
           //`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`
         //);
         //Linking.openURL(
           //`https://api.claris.su/main/vNext/v1/files?downloadId=${link}`
         //)
-        const receiptUrl = 'https://api.claris.su/main/vNext/v1/files?downloadId='+link
-
+        const receiptUrl = link
         Linking.canOpenURL(receiptUrl).then(supported => {
           if (supported) {
             Linking.openURL(receiptUrl);
@@ -76,6 +75,7 @@ export default class Ticket extends React.Component {
     }
 
     if (error) {
+        console.error(error)
         Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
         [{text: 'Закрыть', onPress: () => { }}])
     }

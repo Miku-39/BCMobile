@@ -136,7 +136,7 @@ export default class GoodsTicketEditor extends Component {
                           onChangeText={(text) => {this.updateField(text, 'carModelText')}}/>
                       <Fumi
                           style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.carNumber ? Colors.accentColor : '#FFF'}]}
-                          label={'Номер автомобиля *'}
+                          label={'Номер автомобиля'}
                           iconClass={Icon}
                           iconName={'directions-car'}
                           iconColor={Colors.textColor}

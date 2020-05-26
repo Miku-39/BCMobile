@@ -42,7 +42,7 @@ export default class TicketsListItem extends React.PureComponent {
 
            const ticketInfo = () => {
              return(
-               <View style={{flexDirection: 'row', marginBottom: 5, marginTop: 5}}>
+               <View style={{flexDirection: 'row'}}>
                    <Text style={{fontSize: 11, color: status2colors[item.status && item.status.id], fontStyle: 'italic', marginRight: 5}}>
                    { item.status ? item.status.name : '' }
                    </Text>
@@ -59,9 +59,9 @@ export default class TicketsListItem extends React.PureComponent {
              return (
                       <View style={{width: '100%'}}>
                       <TouchableHighlight onPress={showAlert} underlayColor='#8d47d3'>
-                      <View style={{flexDirection: 'row', backgroundColor: 'white', margin: 1, borderRadius: 5, height: 95}}>
+                      <View style={{flexDirection: 'row', backgroundColor: 'white', borderRadius: 5}}>
                       <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderRadius: 5, margin: 1}}></View>
-                      <View style={{flexDirection: 'column', marginLeft: 8, marginBottom: 1 }}>
+                      <View style={{flexDirection: 'column', marginLeft: 8 }}>
 
                       {header()}
 
@@ -73,6 +73,8 @@ export default class TicketsListItem extends React.PureComponent {
                         <Text style={{fontSize: 16, color: '#767878'}}>{(item.parking ? item.parking.name : 'Парковка не указана')}</Text>
                         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000000'}}>{' ' + (item.parkingPlace && item.parkingPlace || '')}</Text>
                       </View>
+
+                      <Text style={{fontSize: 16, color: '#767878', height: 25, width: '90%'}}>{(item.company ? item.company.name : ' ')}</Text>
 
                       {ticketInfo()}
 
@@ -87,7 +89,7 @@ export default class TicketsListItem extends React.PureComponent {
                   return (
                     <View style={{width: '100%'}}>
                     <TouchableHighlight onPress={showAlert} underlayColor='#FFFFFF'>
-                    <View style={{flexDirection: 'row', width: '100%', backgroundColor: 'white', margin: 1, borderRadius: 5, height: 95}}>
+                    <View style={{flexDirection: 'row', width: '100%', backgroundColor: 'white', margin: 1, borderRadius: 5}}>
                     <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderRadius: 5}}></View>
                       <View style={{flexDirection: 'column', marginLeft: 8, marginBottom: 1 }}>
 
@@ -96,6 +98,8 @@ export default class TicketsListItem extends React.PureComponent {
                       <View style={{flexDirection: 'row'}}>
                         <Text style={{fontSize: 18, color: 'black'}}>{item.visitorFullName && item.visitorFullName ||  'ФИО не указано'}</Text>
                       </View>
+
+                      <Text style={{fontSize: 16, color: '#767878', height: 25, width: '90%'}}>{(item.company ? item.company.name : ' ')}</Text>
 
                       {ticketInfo()}
 
@@ -111,7 +115,7 @@ export default class TicketsListItem extends React.PureComponent {
                   return (
                     <View style={{width: '100%'}}>
                     <TouchableHighlight onPress={showAlert} underlayColor='#FFFFFF'>
-                    <View style={{flexDirection: 'row', width: '100%', backgroundColor: 'white', margin: 1, borderRadius: 5, height: 95}}>
+                    <View style={{flexDirection: 'row', width: '100%', backgroundColor: 'white', margin: 1, borderRadius: 5}}>
                     <View style={{width: 10, backgroundColor: status2colors[item.status && item.status.id], borderRadius: 5}}></View>
                       <View style={{flexDirection: 'column', marginLeft: 8, marginBottom: 1 }}>
 
@@ -125,6 +129,8 @@ export default class TicketsListItem extends React.PureComponent {
                         <Text style={{fontSize: 16, color: '#767878'}}>{(item.parking ? item.parking.name : 'Парковка не указана')}</Text>
                         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000000'}}>{' ' + (item.parkingPlace && item.parkingPlace || '')}</Text>
                       </View>
+
+                      <Text style={{fontSize: 16, color: '#767878', height: 25, width: '90%'}}>{(item.company ? item.company.name : ' ')}</Text>
 
                       {ticketInfo()}
 

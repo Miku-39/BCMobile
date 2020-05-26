@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-elements'
 import { connect } from 'react-redux'
 
 import TicketsList from '../components/SwipeableTicketsList'
-import { Metrics } from '../theme'
+import { Metrics, Colors } from '../theme'
 import { fetch } from '../middleware/redux/actions/Tickets'
 import { update, dismiss } from '../middleware/redux/actions/Ticket'
 import { getTickets, getTicket } from '../middleware/redux/selectors'
@@ -100,7 +100,7 @@ export default class CheckpointScreen extends Component {
             || (item.number && item.number + '').toLowerCase().includes(text.toLowerCase())
             || item.type.shortName && item.type.shortName.toLowerCase().includes(text.toLowerCase()))
         } else {
-            data = items.slice(0, 50)
+            data = items
         }
 
         this.setState({items: data}, this.list.reloadData)
@@ -127,7 +127,7 @@ export default class CheckpointScreen extends Component {
                         lightTheme
                         clearIcon={{color: '#86939e', name: 'close'}}
                         inputStyle={{backgroundColor: 'white', fontSize: 20}}
-                        containerStyle={{backgroundColor: '#627ab4', height: Metrics.navBarHeight, width: '100%', marginTop: -1}}
+                        containerStyle={{backgroundColor: Colors.accentColor, height: Metrics.navBarHeight, width: '100%', marginTop: -1}}
                         onSubmitEditing={this.handleSubmitEditing}
                         onClearText={this._handleHideSearchBarClick}
                         keyboardType='default'

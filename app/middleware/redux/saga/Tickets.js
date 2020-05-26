@@ -38,6 +38,7 @@ function * fetchTicketsSaga() {
           //onCreateTickets: onCreateTicketsResponse ? onCreateTicketsResponse.data : [],
           openTickets: openTicketsResponse ? openTicketsResponse.data : []
         }
+        console.log(tickets.regularTickets.length)
         if(tickets.openTickets){
           tickets.onCreateTickets = tickets.openTickets.filter((ticket) => {
             if(ticket.status.id == '4285215000'){

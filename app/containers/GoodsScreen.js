@@ -132,8 +132,8 @@ export default class GoodsScreen extends Component {
 
         var fieldsHighlights = {
           materialValuesData: !ticket.materialValuesData,
-          expirationDate: ticket.longTerm && !ticket.expirationDate,
-          carNumber: !ticket.carNumber
+          expirationDate: ticket.longTerm && !ticket.expirationDate
+          //carNumber: !ticket.carNumber
         }
 
         var passed = true;

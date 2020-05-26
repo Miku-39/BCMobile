@@ -41,7 +41,7 @@ export default class TicketsList extends React.PureComponent {
                 ref={list => this.list = list}
                 numberOfRowsInSection={() => this.props.items.length}
                 renderCell={this.renderCell}
-                heightForCell={() => 100}
+                heightForCell={() => 121}
                 renderRightWhenSwipeOut={this.renderElement}
                 widthForRightWhenSwipeOut={() => 80}
                 colorForSwipeOutBgColor={() => 'white'}

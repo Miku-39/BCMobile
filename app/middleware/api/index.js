@@ -50,7 +50,7 @@ const addFile = (uri) =>  {
 const authorize = () => instance.get('/vNext/v1/users/current')
 const setAuthHeader = (token) => instance.defaults.headers.authorization = `Bearer ${token}`
 
-const fetchTicketsForCheckpoint = userId => instance.get(`/vnext/v1/requests?filters=RequestsForCheckpoint,CurrentDayRequests&orderBy=Number*-1`)
+const fetchTicketsForCheckpoint = userId => instance.get(`/vnext/v1/requests?filters=RequestsForCheckpoint,CurrentDayRequests&startAt=1&limit=300`)
 const fetchTicketsForSecurityChief = userId => instance.get(`/vNext/v1/requests?filters=RequestsForBolshevikSecurityChief,CurrentDayRequests&pageSize=100&pageNumber=1&orderBy=Number*-1`)
 const fetchParkingsForCars = () => instance.get(`vNext/v1/parkings`).catch(onError)
 //const fetchParkingsForGoods = () => instance.get(`/vNext/v1/parkings`).catch(onError)

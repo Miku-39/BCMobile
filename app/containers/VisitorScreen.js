@@ -72,7 +72,7 @@ export default class VisitorScreen extends Component {
             actualCreationDate: nowDate,
             visitDate: nowDate,
             author: employeeId,
-            status: ACCEPTED_TICKET_STATUS_ID,
+            status: NEW_TICKET_STATUS_ID,
             type: ticketType == 'VISITOR' ? VISITOR_TICKET_TYPE : CAR_TICKET_TYPE,
             client: companyId,
             nonstandardCarNumber: true,

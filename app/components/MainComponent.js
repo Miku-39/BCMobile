@@ -8,7 +8,6 @@ import { ScrollView,
          Alert,
          NativeModules,
          LayoutAnimation } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Images, Colors, Metrics } from '../theme'
 

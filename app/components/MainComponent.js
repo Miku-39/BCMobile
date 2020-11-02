@@ -80,6 +80,13 @@ export default MainComponent = (props) => {
                         </View>
                     </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => { props.addCardTicket() }}>
+                      <View style={styles.Button}>
+                          <Image resizeMode='contain' source={Images.card} style={styles.buttonImage} />
+                          <Text style={styles.buttonLabel}>На пропуск</Text>
+                      </View>
+                    </TouchableOpacity>
+
                     {!(session.isLesnaya && !session.roles.includes('tenant')) &&
                     <TouchableOpacity onPress={() => { props.openTickets('regularTickets') }}>
                         <View style={styles.Button}>

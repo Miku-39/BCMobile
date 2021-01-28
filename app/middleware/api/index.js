@@ -18,9 +18,12 @@ const onError = (error) => {
 
     if (error.response.status === 400) {
       throw Error('Не верный логин или пароль')
-    } else if (error.response.status > 400) {
-      throw Error('При обработке запроса на сервере произошла ошибка, мы ее зафиксировали и уже разбираемся в причинах.')
     }
+    if (error.response.status === 500){
+      throw Error('При создании произошла ошибка. Проверьте, появилась ли заявка в списке')
+    }/*else if (error.response.status > 400) {
+      throw Error('При обработке запроса на сервере произошла ошибка, мы ее зафиксировали и уже разбираемся в причинах.')
+    }*/
   } else if (error.request) {
     console.warn('axios onError', error.request)
     throw Error('Сервер недоступен. Проверьте свое интернет-соединение')

@@ -58,7 +58,7 @@ export default class TicketScreen extends Component {
         const { ticket } = navigation.state.params
 
         return ({
-            title: ticket.number + ' - ' + ticket.status.alternativeName
+            title: ticket.number + ' - ' + ticket.status.name
         })
     }
 

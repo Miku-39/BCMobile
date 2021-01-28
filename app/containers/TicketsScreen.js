@@ -184,7 +184,7 @@ export default class TicketsScreen extends Component {
       const header = item.number + ', ' + item.status.name.toString().toLowerCase()
       var name = item.visitorFullName ? item.visitorFullName : ' '
 
-      if(!item.visitorFullName && item.carNumber)
+      if(item.carNumber)
         name = item.carNumber;
 
       if(item.type.id == '3724900074000')
@@ -193,6 +193,7 @@ export default class TicketsScreen extends Component {
       try {
       try{
       var type = item.type && item.type.name + ' ' + item.visitDate.substring(0, 10)
+      if(item.expirationDate){type += ' - ' + item.expirationDate.substring(0, 10)}
       }catch{ type = item.type && item.type.name + '' }
       return(
 

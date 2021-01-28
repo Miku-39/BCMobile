@@ -1,6 +1,5 @@
 {
   "expo": {
-    "sdkVersion": "33.0.0",
     "name": "Кларис",
     "icon": "./app/theme/images/claris_service_desk-logo.png",
     "version": "3.0",

@@ -18,7 +18,7 @@ import { add, addFile, dismiss } from '../middleware/redux/actions/Ticket'
 
 import { getSession } from '../middleware/redux/selectors'
 import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStorage'
-const OPEN_TICKET_STATUS_ID = '2237224236000';
+const OPEN_TICKET_STATUS_ID = '4285215000';
 
 const CARD_TICKET_TYPE = '437149164000';
 const SERVICE_TICKET_TYPE = '3724900074000'

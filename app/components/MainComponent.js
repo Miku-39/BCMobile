@@ -52,12 +52,14 @@ export default MainComponent = (props) => {
                         </View>
                     </TouchableOpacity>
 
+                    {!(session.accountId == 14691) &&
                     <TouchableOpacity onPress={() => { props.addCarTicket() }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.car} style={styles.buttonImage} />
                             <Text style={styles.buttonLabel}>На{"\n"}въезд авто</Text>
                         </View>
                     </TouchableOpacity>
+                    }
 
                     <TouchableOpacity onPress={() => { props.addGoodsTicket('GOODS_IN') }}>
                           <View style={styles.Button}>
@@ -86,6 +88,11 @@ export default MainComponent = (props) => {
                           <Text style={styles.buttonLabel}>На пропуск</Text>
                       </View>
                     </TouchableOpacity>
+
+                    {(session.roles.includes('serviceRequestsManager') || session.roles.includes('administratorBC')) &&
+                    <View>
+                    </View>
+                    }
 
                     {!(session.isLesnaya && !session.roles.includes('tenant')) &&
                     <TouchableOpacity onPress={() => { props.openTickets('regularTickets') }}>

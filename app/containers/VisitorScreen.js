@@ -135,8 +135,9 @@ export default class VisitorScreen extends Component {
 
         var fieldsHighlights = {
           expirationDate: (ticket.longTerm && !ticket.expirationDate),
-          visitorFullName: !ticket.visitorFullName && ticketType == 'VISITOR',
-          carNumber: !ticket.carNumber && ticketType =='CAR'
+          groupRequestVisitorsData: ticket.isGroupRequest && !ticket.groupRequestVisitorsData,
+          visitorFullName: !ticket.visitorFullName && ticketType == 'VISITOR' && !ticket.isGroupRequest,
+          carNumber: !ticket.carNumber && ticketType =='CAR' && !ticket.isGroupRequest,
         }
 
         var passed = true;

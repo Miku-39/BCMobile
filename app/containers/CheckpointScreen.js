@@ -107,9 +107,14 @@ export default class CheckpointScreen extends Component {
     }
 
     handleChangeStatus = (item) => {
-        if (item.status.id === '421575460000')
-            item.status = { id: WENT_STATUS_ID }
-        else item.status = { id: CAME_STATUS_ID }
+        const nowDate = new Date();
+        if (item.status.id === '421575460000'){
+          item.status = { id: WENT_STATUS_ID }
+          item.departureDate = nowDate
+        }else{
+          item.status = { id: CAME_STATUS_ID }
+          item.arrivalDate = nowDate
+        }
 
         this.props.update(item)
     }

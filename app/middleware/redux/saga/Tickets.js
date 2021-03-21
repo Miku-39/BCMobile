@@ -13,6 +13,9 @@ function * fetchTicketsSaga() {
         var regularTicketsResponse
         var onCreateTicketsResponse
         var openTicketsResponse
+        var newTicketsResponse
+        var completedTicketsResponse
+        var activeTicketsResponse
 
         if(session.isLesnaya){
           //onCreateTicketsResponse = yield call(api.fetchOnCreateTickets, session.companyId)
@@ -33,11 +36,21 @@ function * fetchTicketsSaga() {
           }
         }
 
+        if(session.roles.includes('serviceRequestsManager') || session.roles.includes('administratorBC')){
+          newTicketsResponse = yield call(api.fetchNewTickets)
+          completedTicketsResponse = yield call(api.fetchCompletedTickets)
+          activeTicketsResponse = yield call(api.fetchActiveTickets)
+        }
+
         var tickets = {
           regularTickets: regularTicketsResponse ? regularTicketsResponse.data : [],
           //onCreateTickets: onCreateTicketsResponse ? onCreateTicketsResponse.data : [],
-          openTickets: openTicketsResponse ? openTicketsResponse.data : []
+          openTickets: openTicketsResponse ? openTicketsResponse.data : [],
+          newTickets: newTicketsResponse ? newTicketsResponse.data : [],
+          completedTickets: completedTicketsResponse ? completedTicketsResponse.data : [],
+          activeTickets: activeTicketsResponse ? activeTicketsResponse.data : [],
         }
+        
         console.log(tickets.regularTickets.length)
         if(tickets.openTickets){
           tickets.onCreateTickets = tickets.openTickets.filter((ticket) => {

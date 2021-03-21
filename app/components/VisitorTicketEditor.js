@@ -37,15 +37,14 @@ export default class VisitorTicketEditor extends Component {
        //'additionalFieldsVisible': false,
        carFieldsVisible: this.props.ticketType == 'CAR',
        longTerm: false,
+       isGroupRequest: false,
      }
   }
 
-  setVisible = (field) => {
+  setFlag = (field) => {
     state = this.state
     state[field] = !state[field]
-    if(field == 'longTerm'){
-      this.props.updateField(state[field], field);
-    }
+    this.props.updateField(state[field], field);
     LayoutAnimation.easeInEaseOut();
     this.setState(state)
   }
@@ -56,12 +55,6 @@ export default class VisitorTicketEditor extends Component {
 
     var fields = this.state
     fields[field] = data
-
-    var fieldsVisible = {
-      expirationDate: fields.longTerm
-    }
-
-    fields['fieldsVisible'] = fieldsVisible
     this.setState(fields);
   }
 
@@ -96,7 +89,7 @@ export default class VisitorTicketEditor extends Component {
                         textStyle={styles.checkboxText}
                         checked={this.state.longTerm}
                         checkedColor={Colors.textColor}
-                        onPress={() => {this.setVisible('longTerm')}}/>
+                        onPress={() => {this.setFlag('longTerm')}}/>
                       {this.state.longTerm &&
                       <DatePickerComponent
                         isHighlighted={this.props.fieldsHighlights.expirationDate}
@@ -106,6 +99,13 @@ export default class VisitorTicketEditor extends Component {
                         placeholder="Выберите дату"
                         />
                       }
+                      <CheckBox
+                        title='Групповая заявка'
+                        containerStyle={styles.checkboxContainer}
+                        textStyle={styles.checkboxText}
+                        checked={this.state.isGroupRequest}
+                        checkedColor={Colors.textColor}
+                        onPress={() => {this.setFlag('isGroupRequest')}}/>
                       {this.props.session.isLesnaya &&
                       <PickerComponent
                           label="Здание"
@@ -113,8 +113,9 @@ export default class VisitorTicketEditor extends Component {
                           items={this.props.lesnayaDepartments}
                           onUpdate={(text) => {this.updateField(text, 'department')}}/>}
                   </View>
-
+                  {!(ticketType == 'CAR' &&  this.state.isGroupRequest) &&
                   <View style={styles.fieldsContainer}>
+                      {!this.state.isGroupRequest &&
                       <Fumi
                           style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.visitorFullName ? Colors.accentColor : '#FFF'}]}
                           label={ticketType == 'VISITOR' ? 'ФИО посетителя *' : 'ФИО посетителя'}
@@ -125,6 +126,7 @@ export default class VisitorTicketEditor extends Component {
                           labelStyle={styles.fumiLabel}
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'visitorFullName')}}/>
+                      }
                       {ticketType == 'VISITOR' &&
                       <Fumi
                           style={[styles.fumiStyle, {borderColor: this.props.fieldsHighlights.whoMeets ? Colors.accentColor : '#FFF'}]}
@@ -137,9 +139,29 @@ export default class VisitorTicketEditor extends Component {
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'whoMeets')}}/>}
                   </View>
+                  }
+
+                  {this.state.isGroupRequest &&
+                  <View>
+                  <View style={styles.fieldsContainer}>
+                      <Text style={styles.field}>Список посетителей *</Text>
+
+                      <TextInput
+                        placeholder="ФИО посетителя № авто (формат: х111хх77) и марка пишутся в одну строку, каждый посетитель пишется с новой строки"
+                        underlineColorAndroid='transparent'
+                        style={[styles.textInputStyle, {borderColor: this.props.fieldsHighlights.groupRequestVisitorsData ? Colors.accentColor : '#FFF'}]}
+                        multiline={true}
+                        scrollEnabled={true}
+                        onChangeText={(text) => {this.props.updateField(text, 'groupRequestVisitorsData')}}
+                        />
+                  </View>
+                  </View>
+                  }
 
                   {this.props.ticketType == 'CAR' &&
                   <View style={styles.fieldsContainer}>
+                      {!this.state.isGroupRequest &&
+                      <View>
                       <Fumi
                           style={styles.fumiStyle}
                           label={'Марка автомобиля'}
@@ -160,7 +182,8 @@ export default class VisitorTicketEditor extends Component {
                           labelStyle={styles.fumiLabel}
                           inputStyle={styles.fumiInput}
                           onChangeText={(text) => {this.updateField(text, 'carNumber')}}/>
-
+                      </View>
+                      }
                       <PickerComponent
                           label="Парковка"
                           items={this.props.carParkings}

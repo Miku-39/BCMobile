@@ -12,23 +12,23 @@ const conf = {
 const instance = axios.create(conf)
 
 const onError = (error) => {
-  console.error(error)
+  //console.error(error)
   if (error.response) {
-    console.warn('axios onError', error.response)
+    //console.warn('axios onError', error.response)
 
     if (error.response.status === 400) {
       throw Error('Не верный логин или пароль')
     }
     if (error.response.status === 500){
-      throw Error('При создании произошла ошибка. Проверьте, появилась ли заявка в списке')
+      //throw Error('Проверьте, появилась ли заявка в списке')
     }/*else if (error.response.status > 400) {
       throw Error('При обработке запроса на сервере произошла ошибка, мы ее зафиксировали и уже разбираемся в причинах.')
     }*/
   } else if (error.request) {
-    console.warn('axios onError', error.request)
+    //console.warn('axios onError', error.request)
     throw Error('Сервер недоступен. Проверьте свое интернет-соединение')
   } else {
-    console.warn('Error', error.message)
+    //console.warn('Error', error.message)
   }
 }
 
@@ -53,23 +53,29 @@ const addFile = (uri) =>  {
 const authorize = () => instance.get('/vNext/v1/users/current')
 const setAuthHeader = (token) => instance.defaults.headers.authorization = `Bearer ${token}`
 
-const fetchTicketsForCheckpoint = userId => instance.get(`/vnext/v1/requests?filters=RequestsForCheckpoint,CurrentDayRequests&startAt=1&limit=300`)
+const fetchTicketsForCheckpoint = userId => instance.get(`/vnext/v1/requests?filters=RequestsForCheckpoint,CurrentDayRequests&startAt=1&limit=5000`)
 const fetchTicketsForSecurityChief = userId => instance.get(`/vNext/v1/requests?filters=RequestsForBolshevikSecurityChief,CurrentDayRequests&pageSize=100&pageNumber=1&orderBy=Number*-1`)
 const fetchParkingsForCars = () => instance.get(`vNext/v1/parkings`).catch(onError)
 //const fetchParkingsForGoods = () => instance.get(`/vNext/v1/parkings`).catch(onError)
 
+//General Tickets
 const fetchAllTickets = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=RequestsForTenant,NotClosedRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 const fetchOnCreateTickets = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=RequestsForUserDepartment,OnCreateRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 const fetchOpenTicketsRestricted = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=RequestsForUserDepartment,NotClosedRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 const fetchOpenTickets = companyId => instance.get('vNext/v1/requests?orderBy=number+desc,&filters=NotClosedRequests&pageSize=100&pageNumber=1', conf).catch(onError)
 
-const fetchNewTickets = () => instance.get('vNext/v1/requests?orderBy=number+desc,&amp;filters=ServiceRequests,OnCreateRequests')
-const fetchCompletedTickets = () => instance.get('vNext/v1/requests?orderBy=number+desc,&amp;filters=ServiceRequests,OnCompletedRequests')
-const fetchActiveTickets = () => instance.get('/vNext/v1/requests?orderBy=number+desc,&amp;filters=RequestsServiceAndWorkProduction,ActiveRequests')
+//for Service Requests Managers
+const fetchNewTickets = () => instance.get('vNext/v1/requests?orderBy=number+desc,&amp;filters=ServiceRequests,OnCreateRequests&limit=300')
+const fetchCompletedTickets = () => instance.get('vNext/v1/requests?orderBy=number+desc,&amp;filters=ServiceRequests,OnCompletedRequests&limit=300')
+const fetchActiveTickets = () => instance.get('/vNext/v1/requests?orderBy=number+desc,&amp;filters=RequestsServiceAndWorkProduction,ActiveRequests&limit=300')
+const fetchEmployees = () => instance.get('/vNext/v1/employees?filters=EmployeesForPerformer')
+const fetchPriorities = () => instance.get('/vNext/v1/requestPriorities')
 
+//get a downloadable link for file
 const getFileLink = fileId => instance.get(`vNext/v1/files/${fileId}`)
-const updateTicketStatus = (ticket) => instance.patch(`/vnext/v1/requests/${ticket.id}`, {status: ticket.status})
 
+//working with inividual tickets
+const updateTicketStatus = (ticket) => instance.patch(`/vnext/v1/requests/${ticket.id}`, {status: ticket.status})
 const addTicket = (ticket) => instance.post('/vNext/v1/requests', ticket).catch(onError)
 
 export default {
@@ -90,4 +96,6 @@ export default {
   fetchNewTickets,
   fetchCompletedTickets,
   fetchActiveTickets,
+  fetchEmployees,
+  fetchPriorities
 }

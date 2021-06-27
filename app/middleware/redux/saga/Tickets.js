@@ -18,28 +18,31 @@ function * fetchTicketsSaga() {
         var activeTicketsResponse
 
         if(session.isLesnaya){
-          //onCreateTicketsResponse = yield call(api.fetchOnCreateTickets, session.companyId)
-          if(session.roles.includes('restrictedAdministratorBC')){
-            openTicketsResponse = yield call(api.fetchOpenTicketsRestricted, session.companyId)
-          }else{
-            openTicketsResponse = yield call(api.fetchOpenTickets, session.companyId)
-          }
-        }else{
-          if(session.roles.includes('mobileCheckpoint')){
-            regularTicketsResponse = yield call(api.fetchTicketsForCheckpoint, session.companyId)
-          }else{
-            regularTicketsResponse = yield call(api.fetchAllTickets, session.companyId)
-          }
+              regularTicketsResponse = yield call(api.fetchAllTickets, session.companyId)
+              if(session.roles.includes('restrictedAdministratorBC')){
+                openTicketsResponse = yield call(api.fetchOpenTicketsRestricted, session.companyId)
+              }else{
+                openTicketsResponse = yield call(api.fetchOpenTickets, session.companyId)
+              }
 
-          if(session.roles.includes('bolshevikSecurityChief')){
-            regularTicketsResponse = yield call(api.fetchTicketsForSecurityChief, session.companyId)
-          }
+        }else{
+
+              if(session.roles.includes('mobileCheckpoint')){
+                regularTicketsResponse = yield call(api.fetchTicketsForCheckpoint, session.companyId)
+              }else{
+                regularTicketsResponse = yield call(api.fetchAllTickets, session.companyId)
+              }
+
+              if(session.roles.includes('bolshevikSecurityChief')){
+                regularTicketsResponse = yield call(api.fetchTicketsForSecurityChief, session.companyId)
+              }
+
         }
 
         if(session.roles.includes('serviceRequestsManager') || session.roles.includes('administratorBC')){
-          newTicketsResponse = yield call(api.fetchNewTickets)
-          completedTicketsResponse = yield call(api.fetchCompletedTickets)
-          activeTicketsResponse = yield call(api.fetchActiveTickets)
+              newTicketsResponse = yield call(api.fetchNewTickets)
+              completedTicketsResponse = yield call(api.fetchCompletedTickets)
+              activeTicketsResponse = yield call(api.fetchActiveTickets)
         }
 
         var tickets = {
@@ -50,8 +53,10 @@ function * fetchTicketsSaga() {
           completedTickets: completedTicketsResponse ? completedTicketsResponse.data : [],
           activeTickets: activeTicketsResponse ? activeTicketsResponse.data : [],
         }
-        
-        console.log(tickets.regularTickets.length)
+
+        console.log(tickets.newTickets.length+' '+tickets.completedTickets.length+' '+tickets.activeTickets.length)
+
+
         if(tickets.openTickets){
           tickets.onCreateTickets = tickets.openTickets.filter((ticket) => {
             if(ticket.status.id == '4285215000'){
@@ -65,6 +70,7 @@ function * fetchTicketsSaga() {
         yield put(fetched(tickets))
     }
     catch(error) {
+      console.warn(error)
         yield put(fetchFailed(error))
     }
 }

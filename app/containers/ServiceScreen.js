@@ -66,7 +66,7 @@ export default class ServiceScreen extends Component {
     }
 
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         switch(ticketType) {
@@ -79,7 +79,7 @@ export default class ServiceScreen extends Component {
         }
 
         var ticket = {
-            //actualCreationDate: new Date(),
+            actualCreationDate: new Date(),
             author: employeeId,
             status: NEW_TICKET_STATUS_ID,
             type: ticketTypeId,
@@ -114,7 +114,7 @@ export default class ServiceScreen extends Component {
       }
 
       if (error) {
-          Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
+          Alert.alert( 'Проверьте, появилась ли заявка в списке.',
           [{text: 'Закрыть', onPress: () => { }}])
       }
 

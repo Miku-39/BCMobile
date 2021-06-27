@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Кларис",
+    "name": "Кларис-бета",
     "icon": "./app/theme/images/claris_service_desk-logo.png",
     "version": "3.0",
     "slug": "claris-business-centers",
@@ -23,8 +23,11 @@
         "READ_INTERNAL_STORAGE",
         "WRITE_INTERNAL_STORAGE",
         "CAMERA",
-        "CAMERA_ROLL"
-      ]
+        "CAMERA_ROLL",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json"
     },
     "description": "",
     "platforms": [

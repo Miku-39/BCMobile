@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "823070172381",
+    "project_id": "bcmobile-92c31",
+    "storage_bucket": "bcmobile-92c31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823070172381:android:c341fcb11930e1af596734",
+        "android_client_info": {
+          "package_name": "ru.altsoft.saas.bcmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823070172381-og0rguipql7objldh7ktgii3e4svr8ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATQu1yDuftw09lFY8_KYJDoR6XkYa4VOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823070172381-og0rguipql7objldh7ktgii3e4svr8ao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

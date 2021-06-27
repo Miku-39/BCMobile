@@ -76,6 +76,18 @@ export default class TicketsScreen extends Component {
       case 'openTickets':
       title = 'Активные';
       break;
+
+      case 'newTickets':
+      title = 'Новые';
+      break;
+
+      case 'activeTickets':
+      title = 'Активные';
+      break;
+
+      case 'completedTickets':
+      title = 'Закрытые';
+      break;
     }
         return ({
             title: title,
@@ -109,6 +121,7 @@ export default class TicketsScreen extends Component {
       const { session, tickets } = this.props
       const { type } = this.props.navigation.state.params
       items = tickets.tickets[type]
+      console.log(type)
       items = items ? items : []
       if(Platform.OS != 'android')
         LayoutAnimation.easeInEaseOut();
@@ -181,7 +194,7 @@ export default class TicketsScreen extends Component {
 
     renderItem = ({item}) => {
       const { navigation } = this.props
-      const header = item.number + ', ' + item.status.name.toString().toLowerCase()
+      const header = item.number + (item.status ? (', ' + item.status.name.toString().toLowerCase()) : '')
       var name = item.visitorFullName ? item.visitorFullName : ' '
 
       if(item.carNumber)

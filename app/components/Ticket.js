@@ -76,7 +76,7 @@ export default class Ticket extends React.Component {
 
     if (error) {
         console.error(error)
-        Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
+        Alert.alert( 'Проверьте, появилась ли заявка в списке.',
         [{text: 'Закрыть', onPress: () => { }}])
     }
   }

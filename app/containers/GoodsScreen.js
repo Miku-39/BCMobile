@@ -61,7 +61,7 @@ export default class GoodsScreen extends Component {
     }
 
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         const goodsTicketTypes = { "GOODS_IN": "393629549000",
@@ -113,7 +113,7 @@ export default class GoodsScreen extends Component {
         }
 
         if (error) {
-            Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
+            Alert.alert( 'Проверьте, появилась ли заявка в списке.',
             [
                 {text: 'Закрыть', onPress: () => { }}
             ])

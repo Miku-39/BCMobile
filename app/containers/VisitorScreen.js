@@ -61,7 +61,7 @@ export default class VisitorScreen extends Component {
     }
 
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         const nowDate = new Date();
@@ -114,7 +114,7 @@ export default class VisitorScreen extends Component {
         }
 
         if (error) {
-            Alert.alert( 'Ошибка', 'При сохранении возникла ошибка.',
+            Alert.alert( 'Проверьте, появилась ли заявка в списке.',
             [
                 {text: 'Закрыть', onPress: () => { }}
             ])

@@ -11,20 +11,25 @@ import { View,
 } from 'react-native'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import CardTicketEditor from '../components/CardTicketEditor'
+
+import AltServiceTicketEditor from '../components/AltServiceTicketEditor'
 import Loader from '../components/Loader'
 import * as selectors from '../middleware/redux/selectors'
 import { add, addFile, dismiss } from '../middleware/redux/actions/Ticket'
 
 import { getSession } from '../middleware/redux/selectors'
-import { storeCredentials, loadCredentials } from '../middleware/utils/AsyncStorage'
-const OPEN_TICKET_STATUS_ID = '4285215000';
+const NEW_TICKET_STATUS_ID = '4285215000';
+const ACCEPTED_TICKET_STATUS_ID = '12884953000';
 
 const CARD_TICKET_TYPE = '437149164000';
 const SERVICE_TICKET_TYPE = '3724900074000'
-
 const headerButtonsHandler = { save: () => null }
 
+
+const { UIManager } = NativeModules;
+
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 
 @connect(
     store => ({
@@ -36,7 +41,7 @@ const headerButtonsHandler = { save: () => null }
         fileAdded: selectors.getIsFileAdded(store),
         fileId: selectors.getFileId(store),
         error: selectors.getIsTicketAddingFailed(store),
-        session: getSession(store)
+        session: selectors.getSession(store)
     }),
     dispatch => ({
         addTicket: (ticket) => dispatch(add(ticket)),
@@ -44,7 +49,7 @@ const headerButtonsHandler = { save: () => null }
         dismiss: () => dispatch(dismiss())
     })
 )
-export default class CardScreen extends Component {
+export default class AltServiceScreen extends Component {
     static navigationOptions = ({navigation}) => {
         return ({
             title: 'Новая заявка',
@@ -61,14 +66,11 @@ export default class CardScreen extends Component {
     }
 
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         const { ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         switch(ticketType) {
           case 'SERVICE':
-              ticketTypeId = SERVICE_TICKET_TYPE;
-              break;
-          case 'ALTSERVICE':
               ticketTypeId = SERVICE_TICKET_TYPE;
               break;
           case 'CARD':
@@ -76,18 +78,22 @@ export default class CardScreen extends Component {
               break;
         }
 
-        const ticket = {
-            visitorFullName: '',
+        var ticket = {
             actualCreationDate: new Date(),
+            executionTerm: null,
             author: employeeId,
-            visitDate: new Date(),
-            status: OPEN_TICKET_STATUS_ID,
+            status: NEW_TICKET_STATUS_ID,
             type: ticketTypeId,
             client: companyId,
-            passType: ticketType == 'CARD' ? '2194469501000' : null,
-            isAdditionalService: ticketType == 'ALTSERVICE' ? true : null,
-            photo: null,
-            file: null
+            photo: null
+        }
+
+        if(session.isLesnaya){
+          ticket.department = session.department
+          ticket.asignee = '4051732437000' //Альфаком
+          //ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+          ticket.status = ticket.department == '3959751378000' ? ACCEPTED_TICKET_STATUS_ID : ticket.status
         }
 
         this.setState({ticket: ticket,
@@ -109,13 +115,12 @@ export default class CardScreen extends Component {
       }
 
       if (error) {
-          console.log(error)
           Alert.alert( 'Проверьте, появилась ли заявка в списке.',
           [{text: 'Закрыть', onPress: () => { }}])
       }
 
       if (fileAdded){
-          this.addFileId(fileId, this.file)
+          this.updateField(fileId, 'file')
           Alert.alert( 'Файл добавлен успешно')
       }
     }
@@ -123,10 +128,16 @@ export default class CardScreen extends Component {
     save = () => {
         const { ticket } = this.state
         const { ticketType } = this.props.navigation.state.params
+        const { session } = this.props
+
+        if(session.isLesnaya){
+          //ticket.manager = ticket.department == '3959751378000' ? '3959752547000' : '3959752571000' //если Лесная, то Зиновьев
+          ticket.observersText = ticket.department == '3959751378000' ? '3959752576000' : null //если Лесная, то Курандикова
+        }
+
 
         var fieldsHighlights = {
-          visitorFullName: (ticketType == 'CARD' && !ticket.visitorFullName),
-          expirationDate: (ticket.longterm && !ticket.expirationDate)
+          whatHappened: !ticket.whatHappened
         }
 
         Keyboard.dismiss()
@@ -137,11 +148,11 @@ export default class CardScreen extends Component {
                 break;
             }}
 
-        console.log(ticket)
         if(passed){
+          console.log(ticket)
           this.props.addTicket(ticket)
         }else{
-          Alert.alert('Не заполнены обязательные поля')
+          Alert.alert('Заполните обязательные поля')
         }
 
         LayoutAnimation.easeInEaseOut();
@@ -149,24 +160,13 @@ export default class CardScreen extends Component {
 
     }
 
-    saveFile = (file, name) => {
-        this.file = name
+    saveFile = (file) => {
         this.props.addFile(file)
     }
 
-    addFileId = (fileId, name) => {
-      const { ticket, ticketType } = this.state
-      switch(ticketType) {
-        case 'SERVICE':
-            ticket.file= fileId;
-            break;
-        case 'ALTSERVICE':
-            ticket.file = fileId;
-            break;
-        case 'CARD':
-            ticket[name] = fileId;
-            break;
-      }
+    addFileId = (fileId) => {
+      const { ticket } = this.state
+      ticket.photo = fileId
       this.setState({ticket})
     }
 
@@ -181,16 +181,26 @@ export default class CardScreen extends Component {
            ticketType, session} = this.state
         const { isAdding, fileIsAdding } = this.props
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.allowFontScaling = false;
+
+        const lesnayaDepartments = [
+          { name: "БЦ Лесная 43", id: "3959751378000" },
+          { name: "БЦ Цветной Бульвар", id: "4006045944000" }
+        ]
+
+
+        if(session.department == "4006045944000")
+          lesnayaDepartments[0], lesnayaDepartments[1] = lesnayaDepartments[1], lesnayaDepartments[0]
+        //Text.defaultProps.allowFontScaling = false;
         return (
             <Loader message='Сохранение' isLoading={isAdding || fileIsAdding}>
-                <CardTicketEditor
+                <AltServiceTicketEditor
                     ticket={ticket}
                     updateField={this.updateField}
                     saveFile={this.saveFile}
                     fieldsHighlights={this.state.fieldsHighlights}
                     ticketType={ticketType}
-                    services={session.services}
+                    session={session}
+                    lesnayaDepartments={lesnayaDepartments}
                 />
             </Loader>
         )

@@ -20,6 +20,12 @@ export default MainComponent = (props) => {
   Text.defaultProps = Text.defaultProps || {};
   //Text.defaultProps.allowFontScaling = false;
   const { session } = props
+  const availableButtons = {
+    lesnayaOpenTickets: session.isLesnaya && !session.roles.includes('tenant'),
+    lesnayaOnCreateTickets: session.isLesnaya && !session.roles.includes('tenant'),
+    addCarTicket: !(session.accountId == 14691),
+    alternativeServiceTickets: session.roles.includes('serviceRequestsManager') || session.roles.includes('administratorBC'),
+  }
     return (
         <ScrollView style={styles.mainContainer}>
             {
@@ -29,7 +35,7 @@ export default MainComponent = (props) => {
             }
                   <View style={styles.contentContainer} onLayout={() => {LayoutAnimation.easeInEaseOut();}}>
 
-                    {(session.isLesnaya && !session.roles.includes('tenant')) &&
+                    {availableButtons.lesnayaOpenTickets &&
                     <TouchableOpacity onPress={() => { props.openTickets('openTickets') }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
@@ -37,7 +43,7 @@ export default MainComponent = (props) => {
                         </View>
                     </TouchableOpacity>}
 
-                    {(session.isLesnaya && !session.roles.includes('tenant')) &&
+                    {availableButtons.lesnayaOnCreateTickets &&
                     <TouchableOpacity onPress={() => { props.openTickets('onCreateTickets') }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.sign} style={styles.buttonImage}/>
@@ -52,7 +58,7 @@ export default MainComponent = (props) => {
                         </View>
                     </TouchableOpacity>
 
-                    {!(session.accountId == 14691) &&
+                    {availableButtons.addCarTicket &&
                     <TouchableOpacity onPress={() => { props.addCarTicket() }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.car} style={styles.buttonImage} />
@@ -75,12 +81,23 @@ export default MainComponent = (props) => {
                           </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => { props.addServiceTicket() }}>
+                    {!availableButtons.alternativeServiceTickets &&
+                    <TouchableOpacity onPress={() => {props.addServiceTicket()}}>
                         <View style={styles.Button}>
                           <Image resizeMode='contain' source={Images.wrench} style={styles.buttonImage} />
                           <Text style={styles.buttonLabel}>Сервисная</Text>
                         </View>
                     </TouchableOpacity>
+                    }
+
+                    {availableButtons.alternativeServiceTickets &&
+                    <TouchableOpacity onPress={() => {props.addAltServiceTicket()}}>
+                        <View style={styles.Button}>
+                          <Image resizeMode='contain' source={Images.wrench} style={styles.buttonImage} />
+                          <Text style={styles.buttonLabel}>Сервисная</Text>
+                        </View>
+                    </TouchableOpacity>
+                    }
 
                     <TouchableOpacity onPress={() => { props.addCardTicket() }}>
                       <View style={styles.Button}>
@@ -89,12 +106,34 @@ export default MainComponent = (props) => {
                       </View>
                     </TouchableOpacity>
 
-                    {(session.roles.includes('serviceRequestsManager') || session.roles.includes('administratorBC')) &&
-                    <View>
-                    </View>
+                    {availableButtons.alternativeServiceTickets &&
+                        <TouchableOpacity onPress={() => { props.openTickets('newTickets') }}>
+                            <View style={styles.Button}>
+                                <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
+                                <Text style={styles.buttonLabel}>Новые заявки</Text>
+                            </View>
+                        </TouchableOpacity>
                     }
 
-                    {!(session.isLesnaya && !session.roles.includes('tenant')) &&
+                    {availableButtons.alternativeServiceTickets &&
+                        <TouchableOpacity onPress={() => { props.openTickets('completedTickets') }}>
+                            <View style={styles.Button}>
+                                <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
+                                <Text style={styles.buttonLabel}>Закрытые заявки</Text>
+                            </View>
+                        </TouchableOpacity>
+                    }
+
+                    {availableButtons.alternativeServiceTickets &&
+                        <TouchableOpacity onPress={() => { props.openTickets('activeTickets') }}>
+                            <View style={styles.Button}>
+                                <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>
+                                <Text style={styles.buttonLabel}>Активные заявки</Text>
+                            </View>
+                        </TouchableOpacity>
+                    }
+
+                    {!availableButtons.alternativeServiceTickets &&
                     <TouchableOpacity onPress={() => { props.openTickets('regularTickets') }}>
                         <View style={styles.Button}>
                             <Image resizeMode='contain' source={Images.list} style={styles.buttonImage}/>

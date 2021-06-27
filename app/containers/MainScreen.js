@@ -19,7 +19,7 @@ export default class MainScreenContainer extends Component {
         })
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { session } = this.props
 
         this.setState({session: session})
@@ -36,6 +36,7 @@ export default class MainScreenContainer extends Component {
               addCardTicket={() => navigate('Card', {ticketType: 'CARD'})}
               addGoodsTicket={(type) => navigate('Goods', {ticketType: type})}
               addServiceTicket={() => navigate('Service', {ticketType: 'SERVICE'})}
+              addAltServiceTicket={() => navigate('AltService', {ticketType: 'SERVICE'})}
               openTickets={(type) => navigate('Tickets', {type: type})}
               session={session}
           />

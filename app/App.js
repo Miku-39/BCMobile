@@ -12,6 +12,7 @@ import MainScreen from './containers/MainScreen'
 import TicketsScreen from './containers/TicketsScreen'
 import VisitorScreen from './containers/VisitorScreen'
 import ServiceScreen from './containers/ServiceScreen'
+import AltServiceScreen from './containers/AltServiceScreen'
 import GoodsScreen from './containers/GoodsScreen'
 import TicketScreen from './containers/TicketScreen'
 import CheckpointScreen from './containers/CheckpointScreen'
@@ -30,6 +31,7 @@ const Navigation = StackNavigator({
     Login: { screen: LoginScreen, navigationOptions: { header: null } },
     Main: { screen: MainScreen },
     Service: {screen: ServiceScreen },
+    AltService: { screen: AltServiceScreen },
     Visitor: { screen: VisitorScreen },
     Goods: { screen: GoodsScreen },
     Tickets: { screen: TicketsScreen },

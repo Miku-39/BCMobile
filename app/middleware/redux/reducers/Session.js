@@ -1,5 +1,10 @@
-import { Map } from 'immutable'
-import { LOGIN_REQUEST, IS_LOGGING, LOGGED, LOGIN_FAILED } from '../actions/Session'
+import { Map } from "immutable";
+import {
+  LOGIN_REQUEST,
+  IS_LOGGING,
+  LOGGED,
+  LOGIN_FAILED,
+} from "../actions/Session";
 
 const initialState = Map({
   token: null,
@@ -19,33 +24,61 @@ const initialState = Map({
   services: [],
   priorities: [],
   employees: [],
-})
+});
 
 const reducer = (state = initialState, action) => {
-  switch (action.type){
+  switch (action.type) {
     case LOGIN_REQUEST:
-      return initialState
+      return initialState;
 
     case IS_LOGGING:
-      return state.merge({ isLogging: true })
+      return state.merge({ isLogging: true });
 
     case LOGGED:
-      const { token, userId, user, companyId, accountId, account, roles,
-         carParkings, goodsParkings, services, isLesnaya, department,
-         priorities, employees } = action.payload
-      return state.merge({ token, userId, user, companyId, accountId, isLesnaya, department,
-         account, roles, isLogging: false, logged: true, carParkings, goodsParkings, services,
-         priorities, employees })
+      const {
+        token,
+        userId,
+        user,
+        companyId,
+        accountId,
+        account,
+        roles,
+        carParkings,
+        goodsParkings,
+        services,
+        isLesnaya,
+        department,
+        priorities,
+        employees,
+      } = action.payload;
+      return state.merge({
+        token,
+        userId,
+        user,
+        companyId,
+        accountId,
+        isLesnaya,
+        department,
+        account,
+        roles,
+        isLogging: false,
+        logged: true,
+        carParkings,
+        goodsParkings,
+        services,
+        priorities,
+        employees,
+      });
 
     case LOGIN_FAILED:
       return state.merge({
         isLogging: false,
-        error: action.payload
-      })
+        error: action.payload,
+      });
 
     default:
-       return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;

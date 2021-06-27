@@ -1,12 +1,10 @@
-import React from 'react'
-import App from './app/App'
+import React from "react";
+import App from "./app/App";
 
 export default class Root extends React.Component {
   render() {
     console.disableYellowBox = true;
     console.warn = () => {};
-    return (
-      <App />
-    )
+    return <App />;
   }
 }

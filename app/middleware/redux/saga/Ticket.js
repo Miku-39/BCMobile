@@ -20,9 +20,7 @@ export function * addTicketSaga(action) {
     yield put(actions.isAdding())
 
     try {
-        var ticket = action.payload
-        ticket.isMobile = true
-        const response = yield call(api.addTicket, ticket)
+        const response = yield call(api.addTicket, action.payload)
         yield put(actions.added())
     }
     catch(error) {

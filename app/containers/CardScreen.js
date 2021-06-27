@@ -61,7 +61,7 @@ export default class CardScreen extends Component {
     }
 
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         const { ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         switch(ticketType) {

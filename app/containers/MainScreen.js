@@ -19,7 +19,7 @@ export default class MainScreenContainer extends Component {
         })
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         const { session } = this.props
 
         this.setState({session: session})

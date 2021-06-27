@@ -62,7 +62,7 @@ export default class TicketScreen extends Component {
         })
     }
 
-    UNSAFE_componentWillMount(){
+    componentWillMount(){
       const { ticket } = this.props.navigation.state.params
       if(this.props.session.isLesnaya &&
          (this.props.session.roles.includes('restrictedAdministratorBC') ||
@@ -87,14 +87,12 @@ export default class TicketScreen extends Component {
     }
 
     render() {
-        console.log(this.state.ticket)
         return (
             <View style={{flex: 1}}>
                 <Ticket ticket={this.state.ticket}
                         fieldsProperties={fieldsProperties}
                         updateItem={this.updateItem}
-                        goBack={this.props.navigation.goBack}
-                        token={this.props.token}/>
+                        goBack={this.props.navigation.goBack}/>
             </View>
         )
     }

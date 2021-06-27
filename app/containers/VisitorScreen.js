@@ -61,7 +61,7 @@ export default class VisitorScreen extends Component {
     }
 
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         const { showCarFields, showGoodsFields, ticketType } = this.props.navigation.state.params
         const { employeeId, companyId, session } = this.props
         const nowDate = new Date();
